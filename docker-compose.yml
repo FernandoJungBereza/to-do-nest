@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: to-do-nest-postgres
+    restart: unless-stopped
+    ports:
+      - '${DB_PG_PORT}:5432'
+    environment:
+      POSTGRES_DB: ${DB_PG_DATABASE}
+      POSTGRES_USER: ${DB_PG_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PG_PASSWORD}
+    volumes:
+      - to_do_nest_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  to_do_nest_postgres_data:
