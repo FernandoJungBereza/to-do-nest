@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { RegisterUserResponseDto } from '../dtos/register-user-response.dto';
-import { GetExistingUserUseCase } from './get-existing-user.use-case';
+
+import { GetExistingUserUseCase } from '../get-existing-user.use-case';
+import { UserEntity } from '../../entities/user.entity';
 
 @Injectable()
-export class GetUserByIdUseCase {
+export class GetOneUserByIdUseCase {
   constructor(
     private readonly getExistingUserUseCase: GetExistingUserUseCase,
   ) {}
 
-  async execute(id: string): Promise<RegisterUserResponseDto> {
+  async execute(
+    id: string,
+  ): Promise<Pick<UserEntity, 'id' | 'name' | 'email'>> {
     const user = await this.getExistingUserUseCase.execute({
       where: { id: id },
     });

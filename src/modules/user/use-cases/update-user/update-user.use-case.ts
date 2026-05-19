@@ -4,11 +4,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { Repository } from 'typeorm';
-import { UpdateUserDto } from '../dtos/update-user.dto';
-import { UserEntity } from '../entities/user.entity';
-import { GetExistingUserUseCase } from './get-existing-user.use-case';
+import { UpdateUserDto } from '../../dtos/update-user.dto';
+import { UserEntity } from '../../entities/user.entity';
+import { GetExistingUserUseCase } from '../get-existing-user.use-case';
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -23,9 +23,12 @@ export class UpdateUserUseCase {
       where: { id: id },
     });
 
-    const hashedOldPassword = await hash(updateUserDto.oldPassword, 10);
+    const comparePassword = await compare(
+      updateUserDto.oldPassword,
+      user.password,
+    );
 
-    if (hashedOldPassword !== user.password) {
+    if (!comparePassword) {
       throw new UnauthorizedException('Osld password is incorrect');
     }
 

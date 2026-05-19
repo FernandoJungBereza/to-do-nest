@@ -6,6 +6,7 @@ import { EnvService } from './config/env';
 import { setupSwagger } from './config/swagger.config';
 
 async function bootstrap(): Promise<void> {
+  console.log(process.env.JWT_SECRET);
   const app = await NestFactory.create(AppModule);
   const env = app.get(EnvService);
 

@@ -6,9 +6,9 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { RegisterUserDtoInterface } from '../interfaces/register-user-dto.interface';
+import { PostUserDtoInterface } from '../interfaces/post-user-dto.interface';
 
-export class RegisterUserDto implements RegisterUserDtoInterface {
+export class PostUserDto implements PostUserDtoInterface {
   @ApiProperty({
     description: 'The name of the user',
     example: 'John Doe',
