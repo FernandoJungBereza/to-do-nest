@@ -13,7 +13,7 @@ export function createTypeOrmConfig(env: EnvService): TypeOrmModuleOptions {
     schema: env.dbSchema,
     entities: [__dirname + '/../**/*.entity.{js,ts}'],
     migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
-    synchronize: false,
+    synchronize: env.isDevelopment,
     logging: env.isDevelopment,
   };
 }

@@ -1,4 +1,3 @@
-import { UserEntity } from '@/modules/user/entities/user.entity';
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -6,7 +5,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateAuthDto } from '../dto/create-auth.dto';
+
+import { RegisterUserDto } from '@/modules/user/dtos/register-user.dto';
 import { RegisterAuthUseCase } from '../use-cases/register-auth.use-case';
 
 @ApiTags('Auth')
@@ -21,11 +21,10 @@ export class AuthController {
     description: 'Register a new user',
   })
   @ApiCreatedResponse({
-    type: UserEntity,
     description: 'User registered successfully',
   })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  async register(@Body() registerDto: CreateAuthDto) {
-    return this.registerUseCase.execute(registerDto);
+  async register(@Body() registerUserDto: RegisterUserDto) {
+    return await this.registerUseCase.execute(registerUserDto);
   }
 }

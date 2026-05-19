@@ -9,9 +9,9 @@ const dataSource = new DataSource({
   password: process.env.DB_PG_PASSWORD,
   database: process.env.DB_PG_DATABASE,
   schema: process.env.DB_SCHEMA,
-  entities: [__dirname + './../../*/.entity.{js,ts}'],
+  entities: [__dirname + '/../**/*.entity.{js,ts}'],
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
-  synchronize: true,
+  synchronize: process.env.NODE_ENV === 'development',
 });
 
 export default dataSource;

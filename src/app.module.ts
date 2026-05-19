@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { EnvModule, EnvService } from './config/env';
 import { createTypeOrmConfig } from './config/typeorm.config';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { createTypeOrmConfig } from './config/typeorm.config';
       inject: [EnvService],
       useFactory: createTypeOrmConfig,
     }),
+    UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
