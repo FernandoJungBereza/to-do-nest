@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entities/user.entity';
+import { UserModule } from '../user/user.module';
 import { LoginController } from './use-cases/login/login.controller';
 import { LoginUseCase } from './use-cases/login/login.use-case';
 import { RefreshTokenController } from './use-cases/refresh-token/refresh-token.controller';
@@ -18,6 +19,7 @@ import { RefreshTokenUseCase } from './use-cases/refresh-token/refresh-token.use
         signOptions: { expiresIn: '1d' },
       }),
     }),
+    UserModule,
   ],
   controllers: [LoginController, RefreshTokenController],
   providers: [LoginUseCase, RefreshTokenUseCase],

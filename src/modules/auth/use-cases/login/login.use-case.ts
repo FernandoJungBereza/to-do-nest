@@ -4,6 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare } from 'bcrypt';
@@ -16,6 +17,7 @@ export class LoginUseCase {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async execute(loginDto: LoginDto): Promise<{
@@ -46,7 +48,10 @@ export class LoginUseCase {
       access_token: this.jwtService.sign({ userId: user.id }),
       refresh_token: this.jwtService.sign(
         { userId: user.id },
-        { expiresIn: '7d' },
+        {
+          secret: this.configService.getOrThrow<string>('JWT_REFRESH'),
+          expiresIn: '7d',
+        },
       ),
     };
   }

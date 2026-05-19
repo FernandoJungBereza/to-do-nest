@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-
-import { GetExistingUserUseCase } from '../get-existing-user.use-case';
 import { UserEntity } from '../../entities/user.entity';
+import { GetExistingUserUseCase } from '../get-existing-user.use-case';
 
 @Injectable()
 export class GetOneUserByIdUseCase {

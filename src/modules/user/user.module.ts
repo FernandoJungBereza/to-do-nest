@@ -33,6 +33,6 @@ import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case'
     GetAllUsersUseCase,
     DeleteUserUseCase,
   ],
-  exports: [],
+  exports: [GetOneUserByIdUseCase],
 })
 export class UserModule {}
