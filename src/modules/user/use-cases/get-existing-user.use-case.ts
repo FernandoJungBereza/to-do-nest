@@ -1,17 +1,21 @@
 import { formatWhereClause } from '@/shared/helpers/format-where-clause.helper';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
+import { UserRepositoryAbstractResponse } from '../interfaces/user-repository-abstract-response';
+import { UserRepositoryAbstract } from '../repositories/user.repository.abstract';
 
 @Injectable()
 export class GetExistingUserUseCase {
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    private readonly userRepository: UserRepositoryAbstract,
   ) {}
 
-  async execute(criteria: FindOneOptions<UserEntity>) {
+  async execute(
+    criteria: FindOneOptions<UserEntity>,
+  ): Promise<UserRepositoryAbstractResponse> {
     const user = await this.userRepository.findOne(criteria);
 
     if (!user) {

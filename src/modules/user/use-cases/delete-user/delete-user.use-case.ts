@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { UserEntity } from '../../entities/user.entity';
 import { GetExistingUserUseCase } from '../get-existing-user.use-case';
+import { UserRepositoryAbstract } from '../../repositories/user.repository.abstract';
 
 @Injectable()
 export class DeleteUserUseCase {
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    private readonly userRepository: UserRepositoryAbstract,
     private readonly getExistingUserUseCase: GetExistingUserUseCase,
   ) {}
 

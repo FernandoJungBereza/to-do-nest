@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from '../../entities/user.entity';
+import { UserRepositoryAbstractResponse } from '../../interfaces/user-repository-abstract-response';
 import { GetExistingUserUseCase } from '../get-existing-user.use-case';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class GetOneUserByIdUseCase {
 
   async execute(
     id: string,
-  ): Promise<Pick<UserEntity, 'id' | 'name' | 'email'>> {
+  ): Promise<Pick<UserRepositoryAbstractResponse, 'id' | 'name' | 'email'>> {
     const user = await this.getExistingUserUseCase.execute({
       where: { id: id },
     });
