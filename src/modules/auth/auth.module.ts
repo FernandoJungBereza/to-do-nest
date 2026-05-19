@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entities/user.entity';
 import { LoginController } from './use-cases/login/login.controller';
 import { LoginUseCase } from './use-cases/login/login.use-case';
+import { RefreshTokenController } from './use-cases/refresh-token/refresh-token.controller';
+import { RefreshTokenUseCase } from './use-cases/refresh-token/refresh-token.use-case';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { LoginUseCase } from './use-cases/login/login.use-case';
       }),
     }),
   ],
-  controllers: [LoginController],
-  providers: [LoginUseCase],
+  controllers: [LoginController, RefreshTokenController],
+  providers: [LoginUseCase, RefreshTokenUseCase],
 })
 export class AuthModule {}

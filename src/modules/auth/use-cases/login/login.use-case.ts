@@ -21,6 +21,7 @@ export class LoginUseCase {
   async execute(loginDto: LoginDto): Promise<{
     user: Pick<UserEntity, 'id' | 'name' | 'email'>;
     access_token: string;
+    refresh_token: string;
   }> {
     const user = await this.userRepository.findOne({
       where: { email: loginDto.email },
@@ -36,7 +37,6 @@ export class LoginUseCase {
       throw new UnauthorizedException('Password is incorrect');
     }
 
-    console.log(process.env.JWT_SECRET);
     return {
       user: {
         id: user.id,
@@ -44,6 +44,10 @@ export class LoginUseCase {
         email: user.email,
       },
       access_token: this.jwtService.sign({ userId: user.id }),
+      refresh_token: this.jwtService.sign(
+        { userId: user.id },
+        { expiresIn: '7d' },
+      ),
     };
   }
 }

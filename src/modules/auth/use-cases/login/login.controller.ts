@@ -1,8 +1,9 @@
 import { LoginDto } from '@/modules/auth/dtos/login.dto';
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginUseCase } from './login.use-case';
 
+@ApiTags('Auth')
 @Controller('auth/login')
 export class LoginController {
   constructor(private readonly loginUseCase: LoginUseCase) {}
