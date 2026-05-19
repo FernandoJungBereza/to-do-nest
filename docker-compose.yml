@@ -12,5 +12,16 @@ services:
     volumes:
       - to_do_nest_postgres_data:/var/lib/postgresql/data
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: always
+    ports:
+      - '8085:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+
 volumes:
   to_do_nest_postgres_data:
+  pgadmin_data:
