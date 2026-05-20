@@ -8,7 +8,7 @@ import { ToDoListRepositoryAbstractResponse } from '../interfaces/to-do-list-rep
 
 export abstract class ToDoListRepositoryAbstract {
 	abstract findOne(criteria: FindOneOptions<ToDoListEntity>): Promise<ToDoListRepositoryAbstractResponse | null>;
-	abstract findPaginated(paginationSearchDto: PaginationTitleAndNameDto): Promise<OutputPaginatedToDoListDto>;
+	abstract findPaginated(paginationTitleAndNameDto: PaginationTitleAndNameDto): Promise<OutputPaginatedToDoListDto>;
 	abstract create(toDoListDto: PostToDoListDto): Promise<ToDoListEntity>;
 	abstract update(id: string, updateToDoListDto: UpdateToDoListDto): Promise<UpdateResult>;
 	abstract delete(id: string): Promise<DeleteResult>;

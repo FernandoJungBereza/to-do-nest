@@ -1,12 +1,10 @@
+import { PaginationNameAndEmailDto } from '@/shared/dtos/joins/pagination-name-and-email.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  FindManyOptions,
-  FindOneOptions,
-  Repository,
-  UpdateResult,
-} from 'typeorm';
+import { FindOneOptions, Repository, UpdateResult } from 'typeorm';
 import { DeleteResult } from 'typeorm/browser';
+import { OutputPaginatedUserDto } from '../dtos/output-paginated-user.dto';
+import { OutputUserDto } from '../dtos/output-user.dto';
 import { PostUserDto } from '../dtos/post-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
@@ -15,52 +13,64 @@ import { UserRepositoryAbstract } from './user.repository.abstract';
 
 @Injectable()
 export class UserRepository implements UserRepositoryAbstract {
-  constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-  ) {}
+	constructor(
+		@InjectRepository(UserEntity)
+		private readonly userRepository: Repository<UserEntity>,
+	) {}
 
-  async findOne(
-    criteria: FindOneOptions<UserEntity>,
-  ): Promise<UserRepositoryAbstractResponse | null> {
-    return await this.userRepository.findOne(criteria);
-  }
+	async findOne(criteria: FindOneOptions<UserEntity>): Promise<UserRepositoryAbstractResponse | null> {
+		return await this.userRepository.findOne(criteria);
+	}
 
-  async create(postUserDto: PostUserDto): Promise<UserEntity> {
-    return this.userRepository.create(postUserDto);
-  }
+	async create(postUserDto: PostUserDto): Promise<UserEntity> {
+		return this.userRepository.create(postUserDto);
+	}
 
-  async save(user: UserEntity): Promise<void> {
-    await this.userRepository.save(user);
-  }
+	async save(user: UserEntity): Promise<void> {
+		await this.userRepository.save(user);
+	}
 
-  async update(
-    id: string,
-    updateUserDto: UpdateUserDto,
-  ): Promise<UpdateResult> {
-    return await this.userRepository.update(id, updateUserDto);
-  }
+	async update(id: string, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
+		return await this.userRepository.update(id, updateUserDto);
+	}
 
-  async delete(id: string): Promise<DeleteResult> {
-    return await this.userRepository.delete(id);
-  }
+	async delete(id: string): Promise<DeleteResult> {
+		return await this.userRepository.delete(id);
+	}
 
-  async findAll(
-    criteria: FindManyOptions<UserEntity>,
-  ): Promise<UserRepositoryAbstractResponse[] | []> {
-    return await this.userRepository.find(criteria);
-  }
+	async findPaginated(paginationNameAndEmailDto: PaginationNameAndEmailDto): Promise<OutputPaginatedUserDto> {
+		const userQueryBuilder = this.userRepository.createQueryBuilder('user');
+		userQueryBuilder.select(['user.id', 'user.name', 'user.email', 'user.createdAt', 'user.updatedAt']);
 
-  async findUserPaginated(
-    page: number,
-    limit: number,
-  ): Promise<UserRepositoryAbstractResponse[] | []> {
-    const userQueryBuilder = this.userRepository.createQueryBuilder('user');
+		userQueryBuilder.skip((paginationNameAndEmailDto.page - 1) * paginationNameAndEmailDto.quantity);
+		userQueryBuilder.take(paginationNameAndEmailDto.quantity);
 
-    userQueryBuilder.select(['user.id', 'user.name', 'user.email']);
-    userQueryBuilder.skip((page - 1) * limit);
-    userQueryBuilder.take(limit);
+		if (paginationNameAndEmailDto.name && paginationNameAndEmailDto.email) {
+			userQueryBuilder.where('user.name ILIKE :name AND user.email ILIKE :email', {
+				name: `%${paginationNameAndEmailDto.name}%`,
+				email: `%${paginationNameAndEmailDto.email}%`,
+			});
+		} else if (paginationNameAndEmailDto.name) {
+			userQueryBuilder.where('user.name ILIKE :name', { name: `%${paginationNameAndEmailDto.name}%` });
+		} else if (paginationNameAndEmailDto.email) {
+			userQueryBuilder.where('user.email ILIKE :email', { email: `%${paginationNameAndEmailDto.email}%` });
+		}
 
-    return await userQueryBuilder.getMany();
-  }
+		const [users, totalItems] = await userQueryBuilder.getManyAndCount();
+		const data: OutputUserDto[] = users.map((user) => ({
+			id: user.id,
+			name: user.name,
+			email: user.email,
+			createdAt: user.createdAt,
+			updatedAt: user.updatedAt,
+		}));
+
+		return new OutputPaginatedUserDto({
+			data,
+			currentPage: paginationNameAndEmailDto.page,
+			totalPages: Math.ceil(totalItems / paginationNameAndEmailDto.quantity),
+			totalItems,
+			itemsPerPage: paginationNameAndEmailDto.quantity,
+		});
+	}
 }

@@ -1,16 +1,13 @@
+import { PaginationNameAndEmailDto } from '@/shared/dtos/joins/pagination-name-and-email.dto';
 import { Injectable } from '@nestjs/common';
-import { UserRepositoryAbstractResponse } from '../../interfaces/user-repository-abstract-response';
+import { OutputPaginatedUserDto } from '../../dtos/output-paginated-user.dto';
 import { UserRepositoryAbstract } from '../../repositories/user.repository.abstract';
 
 @Injectable()
 export class GetAllUsersUseCase {
-  constructor(private readonly userRepository: UserRepositoryAbstract) {}
+	constructor(private readonly userRepository: UserRepositoryAbstract) {}
 
-  async execute(): Promise<
-    Pick<UserRepositoryAbstractResponse, 'id' | 'name' | 'email'>[]
-  > {
-    return await this.userRepository.findAll({
-      select: ['id', 'name', 'email'],
-    });
-  }
+	async execute(paginationNameAndEmailDto: PaginationNameAndEmailDto): Promise<OutputPaginatedUserDto> {
+		return await this.userRepository.findPaginated(paginationNameAndEmailDto);
+	}
 }

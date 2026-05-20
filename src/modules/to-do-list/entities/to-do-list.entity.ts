@@ -1,10 +1,10 @@
 import { UserEntity } from '@/modules/user/entities/user.entity';
-import { BaseEntity } from '@/shared/entities/base-entity';
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, UpdateDateColumn } from 'typeorm';
+import { TimestampedEntity } from '@/shared/entities/timestamped-entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { ToDoListEntityInterface } from '../interfaces/to-do-list-entity.interface';
 
 @Entity('to_do_lists')
-export class ToDoListEntity extends BaseEntity implements ToDoListEntityInterface {
+export class ToDoListEntity extends TimestampedEntity implements ToDoListEntityInterface {
 	@Column({ type: 'varchar', length: 255 })
 	title: string;
 
@@ -16,12 +16,6 @@ export class ToDoListEntity extends BaseEntity implements ToDoListEntityInterfac
 
 	@Column({ type: 'uuid', nullable: false })
 	userId: string;
-
-	@CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-	createdAt: Date;
-
-	@UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-	updatedAt: Date;
 
 	@ManyToOne(() => UserEntity, (user) => user.toDoLists)
 	@JoinColumn({ name: 'userId' })
