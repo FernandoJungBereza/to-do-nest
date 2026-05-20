@@ -2,6 +2,7 @@ import { setAuthCookies } from '@/modules/auth/helpers/auth-cookies.helper';
 import { Body, Controller, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
+import { Public } from '../../decorator/public.decorator';
 import { RefreshTokenDto } from '../../dtos/refresh-token.dto';
 import { RefreshTokenUseCase } from './refresh-token.use-case';
 
@@ -10,6 +11,7 @@ import { RefreshTokenUseCase } from './refresh-token.use-case';
 export class RefreshTokenController {
 	constructor(private readonly refreshTokenUseCase: RefreshTokenUseCase) {}
 
+	@Public()
 	@Post('refresh-token')
 	@ApiOperation({ summary: 'Refresh session (reads refreshToken cookie)' })
 	@ApiResponse({ status: 200, description: 'New access token' })

@@ -3,6 +3,7 @@ import { setAuthCookies } from '@/modules/auth/helpers/auth-cookies.helper';
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
+import { Public } from '../../decorator/public.decorator';
 import { LoginUseCase } from './login.use-case';
 
 @ApiTags('Auth')
@@ -10,6 +11,7 @@ import { LoginUseCase } from './login.use-case';
 export class LoginController {
 	constructor(private readonly loginUseCase: LoginUseCase) {}
 
+	@Public()
 	@Post()
 	@ApiOperation({ summary: 'Login a user' })
 	@ApiResponse({ status: 200, description: 'User logged in' })
