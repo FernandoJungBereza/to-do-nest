@@ -3,5 +3,4 @@ export interface UpdateToDoListDtoInterface {
   description?: string;
   completed?: boolean;
   userId: string;
-  updatedAt: Date;
 }

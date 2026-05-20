@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDate,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -58,12 +57,4 @@ export class PostToDoListDto implements PostToDoListDtoInterface {
   @IsNotEmpty()
   @IsUUID()
   userId: string;
-
-  @IsDate()
-  @IsNotEmpty()
-  createdAt: Date;
-
-  @IsDate()
-  @IsNotEmpty()
-  updatedAt: Date;
 }

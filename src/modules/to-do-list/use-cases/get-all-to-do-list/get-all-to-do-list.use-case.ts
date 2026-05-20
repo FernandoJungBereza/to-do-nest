@@ -11,15 +11,6 @@ export class GetAllToDoListUseCase {
     private readonly toDoListRepository: Repository<ToDoListEntity>,
   ) {}
   async execute(): Promise<ToDoListEntityInterface[]> {
-    return await this.toDoListRepository.find({
-      select: [
-        'userId',
-        'title',
-        'description',
-        'completed',
-        'createdAt',
-        'updatedAt',
-      ],
-    });
+    return await this.toDoListRepository.find();
   }
 }

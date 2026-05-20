@@ -3,6 +3,4 @@ export interface PostToDoListDtoInterface {
   description?: string;
   completed?: boolean;
   userId: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
