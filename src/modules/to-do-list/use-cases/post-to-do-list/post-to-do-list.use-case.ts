@@ -1,16 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { GetOneUserByIdUseCase } from '@/modules/user/use-cases/get-one-user-by-id/get-one-user-by-id.use-case';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostToDoListDto } from '../../dtos/post-to-do-list.dto';
-import { ToDoListEntity } from '../../entities/to-do-list.entity';
+import { ToDoListRepositoryAbstract } from '../../repositories/to-do-list.repository.abstract';
 import { ThrowIfExistToDoListUseCase } from '../throw-if-exist-to-do-list.use-case';
 
 @Injectable()
 export class PostToDoListUseCase {
   constructor(
-    @InjectRepository(ToDoListEntity)
-    private readonly toDoListRepository: Repository<ToDoListEntity>,
+    private readonly toDoListRepository: ToDoListRepositoryAbstract,
     private readonly throwIfExistToDoListUseCase: ThrowIfExistToDoListUseCase,
+    private readonly getUserByIdUseCase: GetOneUserByIdUseCase,
   ) {}
 
   async execute(postToDoListDto: PostToDoListDto): Promise<void> {
@@ -20,9 +19,16 @@ export class PostToDoListUseCase {
       },
     });
 
-    const toDoList = this.toDoListRepository.create({
+    const user = await this.getUserByIdUseCase.execute(postToDoListDto.userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const toDoList = await this.toDoListRepository.create({
       ...postToDoListDto,
     });
+
     await this.toDoListRepository.save(toDoList);
   }
 }

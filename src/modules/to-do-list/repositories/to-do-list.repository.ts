@@ -1,12 +1,9 @@
+import { OutputPaginatedDto } from '@/shared/dtos/output-paginated.dto';
+import { PaginationSearchDto } from '@/shared/dtos/pagination-search.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  DeleteResult,
-  FindManyOptions,
-  FindOneOptions,
-  Repository,
-  UpdateResult,
-} from 'typeorm';
+import { DeleteResult, FindOneOptions, Repository, UpdateResult } from 'typeorm';
+import { OutputToDoListDto } from '../dtos/output-to-do-list.dto';
 import { PostToDoListDto } from '../dtos/post-to-do-list.dto';
 import { UpdateToDoListDto } from '../dtos/update-to-do-list.dto';
 import { ToDoListEntity } from '../entities/to-do-list.entity';
@@ -15,55 +12,71 @@ import { ToDoListRepositoryAbstract } from './to-do-list.repository.abstract';
 
 @Injectable()
 export class ToDoListRepository implements ToDoListRepositoryAbstract {
-  constructor(
-    @InjectRepository(ToDoListEntity)
-    private readonly toDoListRepository: Repository<ToDoListEntity>,
-  ) {}
+	constructor(
+		@InjectRepository(ToDoListEntity)
+		private readonly toDoListRepository: Repository<ToDoListEntity>,
+	) {}
 
-  async findOne(
-    criteria: FindOneOptions<ToDoListEntity>,
-  ): Promise<ToDoListRepositoryAbstractResponse | null> {
-    return await this.toDoListRepository.findOne(criteria);
-  }
+	async findOne(criteria: FindOneOptions<ToDoListEntity>): Promise<ToDoListRepositoryAbstractResponse | null> {
+		return await this.toDoListRepository.findOne(criteria);
+	}
 
-  async findAll(
-    criteria: FindManyOptions<ToDoListEntity>,
-  ): Promise<ToDoListRepositoryAbstractResponse[] | []> {
-    return await this.toDoListRepository
-      .createQueryBuilder('toDoList')
-      .select([
-        'toDoList.id',
-        'toDoList.title',
-        'toDoList.description',
-        'toDoList.completed',
-        'toDoList.userId',
-        'toDoList.createdAt',
-        'toDoList.updatedAt',
-        'user.id',
-        'user.name',
-        'user.email',
-        'user.password',
-      ])
-      .where(criteria)
-      .getMany();
-  }
+	async findPaginated(paginationSearchDto: PaginationSearchDto): Promise<OutputPaginatedDto<OutputToDoListDto>> {
+		const toDoListQueryBuilder = this.toDoListRepository.createQueryBuilder('toDoList');
+		toDoListQueryBuilder.leftJoinAndSelect('toDoList.user', 'user');
+		toDoListQueryBuilder.select([
+			'toDoList.id',
+			'toDoList.title',
+			'toDoList.description',
+			'toDoList.completed',
+			'toDoList.userId',
+			'toDoList.createdAt',
+			'toDoList.updatedAt',
+			'user.name',
+			'user.email',
+		]);
 
-  async create(toDoListDto: PostToDoListDto): Promise<ToDoListEntity> {
-    return this.toDoListRepository.create(toDoListDto);
-  }
+		toDoListQueryBuilder.skip((paginationSearchDto.page - 1) * paginationSearchDto.quantity);
+		toDoListQueryBuilder.take(paginationSearchDto.quantity);
+		if (paginationSearchDto.search) {
+			toDoListQueryBuilder.where('toDoList.title ILIKE :search', { search: `%${paginationSearchDto.search}%` });
+		}
+		const [toDoLists, totalItems] = await toDoListQueryBuilder.getManyAndCount();
+		const data: OutputToDoListDto[] = toDoLists.map((toDoList) => ({
+			id: toDoList.id,
+			title: toDoList.title,
+			description: toDoList.description,
+			completed: toDoList.completed,
+			userId: toDoList.userId,
+			createdAt: toDoList.createdAt,
+			updatedAt: toDoList.updatedAt,
+			user: {
+				name: toDoList.user.name,
+				email: toDoList.user.email,
+			},
+		}));
+		return new OutputPaginatedDto<OutputToDoListDto>({
+			data,
+			currentPage: paginationSearchDto.page,
+			totalPages: Math.ceil(totalItems / paginationSearchDto.quantity),
+			totalItems,
+			itemsPerPage: paginationSearchDto.quantity,
+		});
+	}
 
-  async update(
-    id: string,
-    updateToDoListDto: UpdateToDoListDto,
-  ): Promise<UpdateResult> {
-    return await this.toDoListRepository.update(id, updateToDoListDto);
-  }
+	async create(toDoListDto: PostToDoListDto): Promise<ToDoListEntity> {
+		return this.toDoListRepository.create(toDoListDto);
+	}
 
-  async delete(id: string): Promise<DeleteResult> {
-    return await this.toDoListRepository.delete(id);
-  }
+	async update(id: string, updateToDoListDto: UpdateToDoListDto): Promise<UpdateResult> {
+		return await this.toDoListRepository.update(id, updateToDoListDto);
+	}
 
-  async save(toDoList: ToDoListEntity): Promise<void> {
-    await this.toDoListRepository.save(toDoList);
-  }
+	async delete(id: string): Promise<DeleteResult> {
+		return await this.toDoListRepository.delete(id);
+	}
+
+	async save(toDoList: ToDoListEntity): Promise<void> {
+		await this.toDoListRepository.save(toDoList);
+	}
 }
