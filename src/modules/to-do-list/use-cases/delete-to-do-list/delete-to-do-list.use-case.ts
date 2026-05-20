@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ToDoListEntity } from '../../entities/to-do-list.entity';
 import { GetExistingToDoListUseCase } from '../get-existing-to-do-list.use-case';
+import { ToDoListRepositoryAbstract } from '../../repositories/to-do-list.repository.abstract';
 
 @Injectable()
 export class DeleteToDoListUseCase {
 	constructor(
-		@InjectRepository(ToDoListEntity)
-		private readonly toDoListRepository: Repository<ToDoListEntity>,
+		private readonly toDoListRepository: ToDoListRepositoryAbstract,
 		private readonly getExistingToDoListUseCase: GetExistingToDoListUseCase,
 	) {}
 

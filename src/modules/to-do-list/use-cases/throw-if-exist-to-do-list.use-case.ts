@@ -1,15 +1,12 @@
 import { formatWhereClause } from '@/shared/helpers/format-where-clause.helper';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions } from 'typeorm';
 import { ToDoListEntity } from '../entities/to-do-list.entity';
+import { ToDoListRepositoryAbstract } from '../repositories/to-do-list.repository.abstract';
 
 @Injectable()
 export class ThrowIfExistToDoListUseCase {
-	constructor(
-		@InjectRepository(ToDoListEntity)
-		private readonly toDoListRepository: Repository<ToDoListEntity>,
-	) {}
+	constructor(private readonly toDoListRepository: ToDoListRepositoryAbstract) {}
 
 	async execute(criteria: FindOneOptions<ToDoListEntity>) {
 		const toDoList = await this.toDoListRepository.findOne(criteria);

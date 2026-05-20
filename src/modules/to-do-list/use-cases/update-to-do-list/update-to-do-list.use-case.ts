@@ -1,16 +1,13 @@
 import { GetOneUserByIdUseCase } from '@/modules/user/use-cases/get-one-user-by-id/get-one-user-by-id.use-case';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { UpdateToDoListDto } from '../../dtos/update-to-do-list.dto';
-import { ToDoListEntity } from '../../entities/to-do-list.entity';
 import { GetExistingToDoListUseCase } from '../get-existing-to-do-list.use-case';
+import { ToDoListRepositoryAbstract } from '../../repositories/to-do-list.repository.abstract';
 
 @Injectable()
 export class UpdateToDoListUseCase {
 	constructor(
-		@InjectRepository(ToDoListEntity)
-		private readonly toDoListRepository: Repository<ToDoListEntity>,
+		private readonly toDoListRepository: ToDoListRepositoryAbstract,
 		private readonly getExistingToDoListUseCase: GetExistingToDoListUseCase,
 		private readonly getOneUserByIdUseCase: GetOneUserByIdUseCase,
 	) {}
