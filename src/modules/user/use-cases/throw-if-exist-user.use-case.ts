@@ -6,20 +6,16 @@ import { UserRepositoryAbstract } from '../repositories/user.repository.abstract
 
 @Injectable()
 export class ThrowIfExistUserUseCase {
-  constructor(
-    private readonly userRepository: UserRepositoryAbstract,
-  ) {}
+	constructor(private readonly userRepository: UserRepositoryAbstract) {}
 
-  async execute(criteria: FindOneOptions<UserEntity>) {
-    const user = await this.userRepository.findOne(criteria);
+	async execute(criteria: FindOneOptions<UserEntity>) {
+		const user = await this.userRepository.findOne(criteria);
 
-    if (user) {
-      const where = criteria.where || [];
-      const whereClause = formatWhereClause(where);
+		if (user) {
+			const where = criteria.where || [];
+			const whereClause = formatWhereClause(where);
 
-      throw new BadRequestException(
-        `Usuario já existe com os critérios: ${whereClause}`,
-      );
-    }
-  }
+			throw new BadRequestException(`Usuario já existe com os critérios: ${whereClause}`);
+		}
+	}
 }

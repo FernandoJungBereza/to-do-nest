@@ -8,31 +8,26 @@ import { GetExistingToDoListUseCase } from '../get-existing-to-do-list.use-case'
 
 @Injectable()
 export class UpdateToDoListUseCase {
-  constructor(
-    @InjectRepository(ToDoListEntity)
-    private readonly toDoListRepository: Repository<ToDoListEntity>,
-    private readonly getExistingToDoListUseCase: GetExistingToDoListUseCase,
-    private readonly getOneUserByIdUseCase: GetOneUserByIdUseCase,
-  ) {}
+	constructor(
+		@InjectRepository(ToDoListEntity)
+		private readonly toDoListRepository: Repository<ToDoListEntity>,
+		private readonly getExistingToDoListUseCase: GetExistingToDoListUseCase,
+		private readonly getOneUserByIdUseCase: GetOneUserByIdUseCase,
+	) {}
 
-  async execute(
-    id: string,
-    updateToDoListDto: UpdateToDoListDto,
-  ): Promise<void> {
-    const toDoList = await this.getExistingToDoListUseCase.execute({
-      where: { id },
-    });
+	async execute(id: string, updateToDoListDto: UpdateToDoListDto): Promise<void> {
+		const toDoList = await this.getExistingToDoListUseCase.execute({
+			where: { id },
+		});
 
-    const findUser = await this.getOneUserByIdUseCase.execute(
-      updateToDoListDto.userId,
-    );
+		const findUser = await this.getOneUserByIdUseCase.execute(updateToDoListDto.userId);
 
-    if (!findUser) {
-      throw new NotFoundException('User not found');
-    }
+		if (!findUser) {
+			throw new NotFoundException('User not found');
+		}
 
-    await this.toDoListRepository.update(toDoList.id, {
-      ...updateToDoListDto,
-    });
-  }
+		await this.toDoListRepository.update(toDoList.id, {
+			...updateToDoListDto,
+		});
+	}
 }

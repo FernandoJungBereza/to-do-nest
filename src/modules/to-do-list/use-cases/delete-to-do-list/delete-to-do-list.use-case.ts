@@ -6,17 +6,17 @@ import { GetExistingToDoListUseCase } from '../get-existing-to-do-list.use-case'
 
 @Injectable()
 export class DeleteToDoListUseCase {
-  constructor(
-    @InjectRepository(ToDoListEntity)
-    private readonly toDoListRepository: Repository<ToDoListEntity>,
-    private readonly getExistingToDoListUseCase: GetExistingToDoListUseCase,
-  ) {}
+	constructor(
+		@InjectRepository(ToDoListEntity)
+		private readonly toDoListRepository: Repository<ToDoListEntity>,
+		private readonly getExistingToDoListUseCase: GetExistingToDoListUseCase,
+	) {}
 
-  async execute(id: string): Promise<void> {
-    const toDoList = await this.getExistingToDoListUseCase.execute({
-      where: { id },
-    });
+	async execute(id: string): Promise<void> {
+		const toDoList = await this.getExistingToDoListUseCase.execute({
+			where: { id },
+		});
 
-    await this.toDoListRepository.delete(toDoList.id);
-  }
+		await this.toDoListRepository.delete(toDoList.id);
+	}
 }

@@ -6,29 +6,29 @@ import { ThrowIfExistToDoListUseCase } from '../throw-if-exist-to-do-list.use-ca
 
 @Injectable()
 export class PostToDoListUseCase {
-  constructor(
-    private readonly toDoListRepository: ToDoListRepositoryAbstract,
-    private readonly throwIfExistToDoListUseCase: ThrowIfExistToDoListUseCase,
-    private readonly getUserByIdUseCase: GetOneUserByIdUseCase,
-  ) {}
+	constructor(
+		private readonly toDoListRepository: ToDoListRepositoryAbstract,
+		private readonly throwIfExistToDoListUseCase: ThrowIfExistToDoListUseCase,
+		private readonly getUserByIdUseCase: GetOneUserByIdUseCase,
+	) {}
 
-  async execute(postToDoListDto: PostToDoListDto): Promise<void> {
-    await this.throwIfExistToDoListUseCase.execute({
-      where: {
-        userId: postToDoListDto.userId,
-      },
-    });
+	async execute(postToDoListDto: PostToDoListDto): Promise<void> {
+		await this.throwIfExistToDoListUseCase.execute({
+			where: {
+				userId: postToDoListDto.userId,
+			},
+		});
 
-    const user = await this.getUserByIdUseCase.execute(postToDoListDto.userId);
+		const user = await this.getUserByIdUseCase.execute(postToDoListDto.userId);
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+		if (!user) {
+			throw new NotFoundException('User not found');
+		}
 
-    const toDoList = await this.toDoListRepository.create({
-      ...postToDoListDto,
-    });
+		const toDoList = await this.toDoListRepository.create({
+			...postToDoListDto,
+		});
 
-    await this.toDoListRepository.save(toDoList);
-  }
+		await this.toDoListRepository.save(toDoList);
+	}
 }

@@ -10,18 +10,18 @@ import { RefreshTokenController } from './use-cases/refresh-token/refresh-token.
 import { RefreshTokenUseCase } from './use-cases/refresh-token/refresh-token.use-case';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([UserEntity]),
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.getOrThrow<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1d' },
-      }),
-    }),
-    UserModule,
-  ],
-  controllers: [LoginController, RefreshTokenController],
-  providers: [LoginUseCase, RefreshTokenUseCase],
+	imports: [
+		TypeOrmModule.forFeature([UserEntity]),
+		JwtModule.registerAsync({
+			inject: [ConfigService],
+			useFactory: (configService: ConfigService) => ({
+				secret: configService.getOrThrow<string>('JWT_SECRET'),
+				signOptions: { expiresIn: '1d' },
+			}),
+		}),
+		UserModule,
+	],
+	controllers: [LoginController, RefreshTokenController],
+	providers: [LoginUseCase, RefreshTokenUseCase],
 })
 export class AuthModule {}

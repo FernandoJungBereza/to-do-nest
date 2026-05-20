@@ -17,28 +17,22 @@ import { UpdateUserController } from './use-cases/update-user/update-user.contro
 import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
-  controllers: [
-    DeleteUserController,
-    GetOneUserByIdController,
-    GetAllUserController,
-    PostUserController,
-    UpdateUserController,
-  ],
-  providers: [
-    PostUserUseCase,
-    UpdateUserUseCase,
-    ThrowIfExistUserUseCase,
-    GetOneUserByIdUseCase,
-    GetExistingUserUseCase,
-    UpdateUserUseCase,
-    GetAllUsersUseCase,
-    DeleteUserUseCase,
-    {
-      provide: UserRepositoryAbstract,
-      useClass: UserRepository,
-    },
-  ],
-  exports: [GetOneUserByIdUseCase],
+	imports: [TypeOrmModule.forFeature([UserEntity])],
+	controllers: [DeleteUserController, GetOneUserByIdController, GetAllUserController, PostUserController, UpdateUserController],
+	providers: [
+		PostUserUseCase,
+		UpdateUserUseCase,
+		ThrowIfExistUserUseCase,
+		GetOneUserByIdUseCase,
+		GetExistingUserUseCase,
+		UpdateUserUseCase,
+		GetAllUsersUseCase,
+		DeleteUserUseCase,
+		{
+			provide: UserRepositoryAbstract,
+			useClass: UserRepository,
+		},
+	],
+	exports: [GetOneUserByIdUseCase],
 })
 export class UserModule {}

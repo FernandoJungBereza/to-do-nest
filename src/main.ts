@@ -6,21 +6,21 @@ import { EnvService } from './config/env';
 import { setupSwagger } from './config/swagger.config';
 
 async function bootstrap(): Promise<void> {
-  console.log(process.env.JWT_SECRET);
-  const app = await NestFactory.create(AppModule);
-  const env = app.get(EnvService);
+	console.log(process.env.JWT_SECRET);
+	const app = await NestFactory.create(AppModule);
+	const env = app.get(EnvService);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+	app.useGlobalPipes(
+		new ValidationPipe({
+			whitelist: true,
+			forbidNonWhitelisted: true,
+			transform: true,
+		}),
+	);
 
-  setupSwagger(app, env);
+	setupSwagger(app, env);
 
-  await app.listen(env.port);
+	await app.listen(env.port);
 }
 
 void bootstrap();

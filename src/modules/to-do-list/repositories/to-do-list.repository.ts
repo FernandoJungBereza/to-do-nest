@@ -1,8 +1,9 @@
-import { OutputPaginatedDto } from '@/shared/dtos/output-paginated.dto';
-import { PaginationSearchDto } from '@/shared/dtos/pagination-search.dto';
+import { OutputPaginatedDto } from '@/shared/dtos/generics/output-paginated.dto';
+import { PaginationSearchDto } from '@/shared/dtos/joins/pagination-search.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, FindOneOptions, Repository, UpdateResult } from 'typeorm';
+import { OutputPaginatedToDoListDto } from '../dtos/output-paginated-to-do-list.dto';
 import { OutputToDoListDto } from '../dtos/output-to-do-list.dto';
 import { PostToDoListDto } from '../dtos/post-to-do-list.dto';
 import { UpdateToDoListDto } from '../dtos/update-to-do-list.dto';
@@ -21,7 +22,7 @@ export class ToDoListRepository implements ToDoListRepositoryAbstract {
 		return await this.toDoListRepository.findOne(criteria);
 	}
 
-	async findPaginated(paginationSearchDto: PaginationSearchDto): Promise<OutputPaginatedDto<OutputToDoListDto>> {
+	async findPaginated(paginationSearchDto: PaginationSearchDto): Promise<OutputPaginatedToDoListDto> {
 		const toDoListQueryBuilder = this.toDoListRepository.createQueryBuilder('toDoList');
 		toDoListQueryBuilder.leftJoinAndSelect('toDoList.user', 'user');
 		toDoListQueryBuilder.select([

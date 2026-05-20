@@ -7,24 +7,18 @@ import { UserRepositoryAbstract } from '../repositories/user.repository.abstract
 
 @Injectable()
 export class GetExistingUserUseCase {
-  constructor(
-    private readonly userRepository: UserRepositoryAbstract,
-  ) {}
+	constructor(private readonly userRepository: UserRepositoryAbstract) {}
 
-  async execute(
-    criteria: FindOneOptions<UserEntity>,
-  ): Promise<UserRepositoryAbstractResponse> {
-    const user = await this.userRepository.findOne(criteria);
+	async execute(criteria: FindOneOptions<UserEntity>): Promise<UserRepositoryAbstractResponse> {
+		const user = await this.userRepository.findOne(criteria);
 
-    if (!user) {
-      const where = criteria.where || [];
-      const whereClause = formatWhereClause(where);
+		if (!user) {
+			const where = criteria.where || [];
+			const whereClause = formatWhereClause(where);
 
-      throw new NotFoundException(
-        `Usuario não encontrado com os critérios: ${whereClause}`,
-      );
-    }
+			throw new NotFoundException(`Usuario não encontrado com os critérios: ${whereClause}`);
+		}
 
-    return user;
-  }
+		return user;
+	}
 }

@@ -4,14 +4,12 @@ import { GetExistingToDoListUseCase } from '../get-existing-to-do-list.use-case'
 
 @Injectable()
 export class GetOneToDoListByIdUseCase {
-  constructor(
-    private readonly getExistingToDoListUseCase: GetExistingToDoListUseCase,
-  ) {}
+	constructor(private readonly getExistingToDoListUseCase: GetExistingToDoListUseCase) {}
 
-  async execute(id: string): Promise<ToDoListEntityInterface | null> {
-    const toDoList = await this.getExistingToDoListUseCase.execute({
-      where: { id },
-    });
-    return toDoList;
-  }
+	async execute(id: string): Promise<ToDoListEntityInterface | null> {
+		const toDoList = await this.getExistingToDoListUseCase.execute({
+			where: { id },
+		});
+		return toDoList;
+	}
 }

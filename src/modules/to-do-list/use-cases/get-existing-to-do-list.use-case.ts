@@ -7,25 +7,21 @@ import { ToDoListEntityInterface } from '../interfaces/to-do-list-entity.interfa
 
 @Injectable()
 export class GetExistingToDoListUseCase {
-  constructor(
-    @InjectRepository(ToDoListEntity)
-    private readonly toDoListRepository: Repository<ToDoListEntity>,
-  ) {}
+	constructor(
+		@InjectRepository(ToDoListEntity)
+		private readonly toDoListRepository: Repository<ToDoListEntity>,
+	) {}
 
-  async execute(
-    criteria: FindOneOptions<ToDoListEntity>,
-  ): Promise<ToDoListEntityInterface> {
-    const toDoList = await this.toDoListRepository.findOne(criteria);
+	async execute(criteria: FindOneOptions<ToDoListEntity>): Promise<ToDoListEntityInterface> {
+		const toDoList = await this.toDoListRepository.findOne(criteria);
 
-    if (!toDoList) {
-      const where = criteria.where || [];
-      const whereClause = formatWhereClause(where);
+		if (!toDoList) {
+			const where = criteria.where || [];
+			const whereClause = formatWhereClause(where);
 
-      throw new NotFoundException(
-        `to-do list não encontrado para o usuário com os critérios: ${whereClause}`,
-      );
-    }
+			throw new NotFoundException(`to-do list não encontrado para o usuário com os critérios: ${whereClause}`);
+		}
 
-    return toDoList;
-  }
+		return toDoList;
+	}
 }
