@@ -46,8 +46,9 @@ export class UserRepository implements UserRepositoryAbstract {
 		await this.userRepository.restore(id);
 	}
 
-	async findAllDeleted(): Promise<UserEntity[]> {
+	async findDeletedById(criteria: FindOneOptions<UserEntity>): Promise<UserEntity[]> {
 		return await this.userRepository.find({
+			where: criteria.where,
 			withDeleted: true,
 		});
 	}
