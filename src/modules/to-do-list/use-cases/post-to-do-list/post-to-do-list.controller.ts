@@ -8,7 +8,7 @@ import { PostToDoListUseCase } from './post-to-do-list.use-case';
 export class PostToDoListController {
   constructor(private readonly postToDoListUseCase: PostToDoListUseCase) {}
 
-  @Post(':userId')
+  @Post()
   @ApiOperation({ summary: 'Create a new to-do list' })
   @ApiResponse({ status: 201, description: 'To-do list created' })
   @ApiResponse({ status: 400, description: 'Bad request' })

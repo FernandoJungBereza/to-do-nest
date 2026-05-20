@@ -7,7 +7,7 @@ import { GetAllToDoListUseCase } from './get-all-to-do-list.use-case';
 export class GetAllToDoListController {
   constructor(private readonly getAllToDoListUseCase: GetAllToDoListUseCase) {}
 
-  @Get(':userId')
+  @Get()
   @ApiOperation({ summary: 'Get all to-do lists for a user' })
   @ApiResponse({ status: 200, description: 'To-do lists found' })
   @ApiResponse({ status: 404, description: 'To-do lists not found' })

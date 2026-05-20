@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ToDoListEntity } from '../../entities/to-do-list.entity';
 import { ToDoListEntityInterface } from '../../interfaces/to-do-list-entity.interface';
@@ -6,6 +7,7 @@ import { ToDoListEntityInterface } from '../../interfaces/to-do-list-entity.inte
 @Injectable()
 export class GetAllToDoListUseCase {
   constructor(
+    @InjectRepository(ToDoListEntity)
     private readonly toDoListRepository: Repository<ToDoListEntity>,
   ) {}
   async execute(): Promise<ToDoListEntityInterface[]> {

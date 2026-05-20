@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
+import { UserRepository } from './repositories/user.repository';
+import { UserRepositoryAbstract } from './repositories/user.repository.abstract';
 import { DeleteUserController } from './use-cases/delete-user/delete-user.controller';
 import { DeleteUserUseCase } from './use-cases/delete-user/delete-user.use-case';
 import { GetAllUserController } from './use-cases/get-all-users/get-all-users.controller';
@@ -32,6 +34,10 @@ import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case'
     UpdateUserUseCase,
     GetAllUsersUseCase,
     DeleteUserUseCase,
+    {
+      provide: UserRepositoryAbstract,
+      useClass: UserRepository,
+    },
   ],
   exports: [GetOneUserByIdUseCase],
 })

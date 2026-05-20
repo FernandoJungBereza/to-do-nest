@@ -1,6 +1,5 @@
 import { formatWhereClause } from '@/shared/helpers/format-where-clause.helper';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { UserRepositoryAbstractResponse } from '../interfaces/user-repository-abstract-response';
@@ -9,7 +8,6 @@ import { UserRepositoryAbstract } from '../repositories/user.repository.abstract
 @Injectable()
 export class GetExistingUserUseCase {
   constructor(
-    @InjectRepository(UserEntity)
     private readonly userRepository: UserRepositoryAbstract,
   ) {}
 

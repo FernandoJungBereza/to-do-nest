@@ -1,8 +1,11 @@
+import { UserEntity } from '@/modules/user/entities/user.entity';
+import { BaseEntity } from '@/shared/entities/base-entity';
 import {
-  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   UpdateDateColumn,
 } from 'typeorm';
 import { ToDoListEntityInterface } from '../interfaces/to-do-list-entity.interface';
@@ -29,4 +32,8 @@ export class ToDoListEntity
 
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
+
+  @ManyToOne(() => UserEntity, (user) => user.toDoLists)
+  @JoinColumn({ name: 'userId' })
+  user: UserEntity;
 }

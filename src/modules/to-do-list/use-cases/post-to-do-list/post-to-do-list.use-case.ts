@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostToDoListDto } from '../../dtos/post-to-do-list.dto';
 import { ToDoListEntity } from '../../entities/to-do-list.entity';
@@ -7,6 +8,7 @@ import { ThrowIfExistToDoListUseCase } from '../throw-if-exist-to-do-list.use-ca
 @Injectable()
 export class PostToDoListUseCase {
   constructor(
+    @InjectRepository(ToDoListEntity)
     private readonly toDoListRepository: Repository<ToDoListEntity>,
     private readonly throwIfExistToDoListUseCase: ThrowIfExistToDoListUseCase,
   ) {}

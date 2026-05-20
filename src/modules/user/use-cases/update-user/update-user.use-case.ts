@@ -3,17 +3,14 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcrypt';
 import { UpdateUserDto } from '../../dtos/update-user.dto';
-import { UserEntity } from '../../entities/user.entity';
-import { GetExistingUserUseCase } from '../get-existing-user.use-case';
 import { UserRepositoryAbstract } from '../../repositories/user.repository.abstract';
+import { GetExistingUserUseCase } from '../get-existing-user.use-case';
 
 @Injectable()
 export class UpdateUserUseCase {
   constructor(
-    @InjectRepository(UserEntity)
     private readonly userRepository: UserRepositoryAbstract,
     private readonly getExistingUserUseCase: GetExistingUserUseCase,
   ) {}

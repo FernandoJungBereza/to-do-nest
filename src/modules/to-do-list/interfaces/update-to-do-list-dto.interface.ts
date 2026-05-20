@@ -1,9 +1,7 @@
-export interface ToDoListEntityInterface {
-  id: string;
+export interface UpdateToDoListDtoInterface {
   title: string;
   description?: string;
   completed?: boolean;
   userId: string;
-  createdAt: Date;
   updatedAt: Date;
 }

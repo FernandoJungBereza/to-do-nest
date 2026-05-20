@@ -14,7 +14,7 @@ export class GetExistingToDoListUseCase {
 
   async execute(
     criteria: FindOneOptions<ToDoListEntity>,
-  ): Promise<ToDoListEntityInterface | null> {
+  ): Promise<ToDoListEntityInterface> {
     const toDoList = await this.toDoListRepository.findOne(criteria);
 
     if (!toDoList) {

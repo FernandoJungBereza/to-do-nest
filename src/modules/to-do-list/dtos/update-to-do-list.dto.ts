@@ -9,9 +9,9 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { PostToDoListDtoInterface } from '../interfaces/post-to-do-list-dto.interface';
+import { UpdateToDoListDtoInterface } from '../interfaces/update-to-do-list-dto.interface';
 
-export class PostToDoListDto implements PostToDoListDtoInterface {
+export class UpdateToDoListDto implements UpdateToDoListDtoInterface {
   @ApiProperty({
     description: 'The title of the to-do list',
     example: 'Buy groceries',
@@ -25,6 +25,7 @@ export class PostToDoListDto implements PostToDoListDtoInterface {
   @MinLength(3)
   @MaxLength(255)
   title: string;
+
   @ApiProperty({
     description: 'The description of the to-do list',
     example: 'Buy groceries for the week',
@@ -58,10 +59,6 @@ export class PostToDoListDto implements PostToDoListDtoInterface {
   @IsNotEmpty()
   @IsUUID()
   userId: string;
-
-  @IsDate()
-  @IsNotEmpty()
-  createdAt: Date;
 
   @IsDate()
   @IsNotEmpty()
