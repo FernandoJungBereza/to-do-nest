@@ -14,12 +14,12 @@ import { GetOneUserByIdUseCase } from './use-cases/get-one-user-by-id/get-one-us
 import { PostUserController } from './use-cases/post-user/post-user.controller';
 import { PostUserUseCase } from './use-cases/post-user/post-user.use-case';
 import { RestoreUserController } from './use-cases/restore-user/restore-user.controller';
+import { RestoreUserUseCase } from './use-cases/restore-user/restore-user.use-case';
 import { SoftDeleteUserController } from './use-cases/soft-delete-user/soft-delete-user.controller';
 import { SoftDeleteUserUseCase } from './use-cases/soft-delete-user/soft-delete-user.use-case';
 import { ThrowIfExistUserUseCase } from './use-cases/throw-if-exist-user.use-case';
 import { UpdateUserController } from './use-cases/update-user/update-user.controller';
 import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case';
-import { RestoreUserUseCase } from './use-cases/restore-user/restore-user.use-case';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([UserEntity])],
