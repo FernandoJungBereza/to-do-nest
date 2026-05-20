@@ -38,6 +38,20 @@ export class UserRepository implements UserRepositoryAbstract {
 		return await this.userRepository.delete(id);
 	}
 
+	async softDelete(id: string): Promise<DeleteResult> {
+		return await this.userRepository.softDelete(id);
+	}
+
+	async restore(id: string): Promise<void> {
+		await this.userRepository.restore(id);
+	}
+
+	async findAllDeleted(): Promise<UserEntity[]> {
+		return await this.userRepository.find({
+			withDeleted: true,
+		});
+	}
+
 	async findPaginated(paginationNameAndEmailDto: PaginationNameAndEmailDto): Promise<OutputPaginatedUserDto> {
 		const userQueryBuilder = this.userRepository.createQueryBuilder('user');
 		userQueryBuilder.select(['user.id', 'user.name', 'user.email', 'user.createdAt', 'user.updatedAt']);

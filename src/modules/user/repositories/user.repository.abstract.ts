@@ -15,4 +15,7 @@ export abstract class UserRepositoryAbstract {
 	abstract update(id: string, updateUserDto: UpdateUserDto): Promise<UpdateResult>;
 	abstract delete(id: string): Promise<DeleteResult>;
 	abstract findPaginated(paginationNameAndEmailDto: PaginationNameAndEmailDto): Promise<OutputPaginatedUserDto>;
+	abstract softDelete(id: string): Promise<DeleteResult>;
+	abstract restore(id: string): Promise<void>;
+	abstract findAllDeleted(): Promise<UserEntity[]>;
 }
