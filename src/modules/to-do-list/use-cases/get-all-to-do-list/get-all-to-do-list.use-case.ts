@@ -1,16 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ToDoListEntity } from '../../entities/to-do-list.entity';
-import { ToDoListEntityInterface } from '../../interfaces/to-do-list-entity.interface';
+import { ToDoListRepositoryAbstractResponse } from '../../interfaces/to-do-list-repository-abstract-response';
+import { ToDoListRepositoryAbstract } from '../../repositories/to-do-list.repository.abstract';
 
 @Injectable()
 export class GetAllToDoListUseCase {
   constructor(
-    @InjectRepository(ToDoListEntity)
-    private readonly toDoListRepository: Repository<ToDoListEntity>,
+    private readonly toDoListRepository: ToDoListRepositoryAbstract,
   ) {}
-  async execute(): Promise<ToDoListEntityInterface[]> {
-    return await this.toDoListRepository.find();
+  async execute(): Promise<ToDoListRepositoryAbstractResponse[]> {
+    return await this.toDoListRepository.findAll({});
   }
 }
