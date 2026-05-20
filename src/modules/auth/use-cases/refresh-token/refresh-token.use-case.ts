@@ -27,7 +27,7 @@ export class RefreshTokenUseCase {
 		const refreshSecret = this.configService.getOrThrow<string>('JWT_REFRESH');
 
 		return {
-			access_token: this.jwtService.sign({ userId: user.id }),
+			access_token: this.jwtService.sign({ userId: user.id }, { expiresIn: '1h' }),
 			refresh_token: this.jwtService.sign({ userId: user.id }, { secret: refreshSecret, expiresIn: '7d' }),
 		};
 	}

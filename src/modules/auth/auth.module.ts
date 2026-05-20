@@ -16,7 +16,7 @@ import { RefreshTokenUseCase } from './use-cases/refresh-token/refresh-token.use
 			inject: [ConfigService],
 			useFactory: (configService: ConfigService) => ({
 				secret: configService.getOrThrow<string>('JWT_SECRET'),
-				signOptions: { expiresIn: '1d' },
+				signOptions: { expiresIn: '1h' },
 			}),
 		}),
 		UserModule,

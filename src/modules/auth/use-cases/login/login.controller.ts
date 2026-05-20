@@ -1,4 +1,5 @@
 import { LoginDto } from '@/modules/auth/dtos/login.dto';
+import { setAuthCookies } from '@/modules/auth/helpers/auth-cookies.helper';
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
@@ -14,16 +15,13 @@ export class LoginController {
 	@ApiResponse({ status: 200, description: 'User logged in' })
 	@ApiResponse({ status: 401, description: 'Unauthorized' })
 	async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) {
-		const { access_token } = await this.loginUseCase.execute(loginDto);
-		const response = {
+		const { user, access_token, refresh_token } = await this.loginUseCase.execute(loginDto);
+
+		setAuthCookies(res, access_token, refresh_token);
+
+		return {
+			user,
 			access_token,
 		};
-		res.cookie('accessToken', access_token, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
-			maxAge: 1 * 60 * 60 * 1000,
-			sameSite: 'lax',
-		});
-		return response;
 	}
 }

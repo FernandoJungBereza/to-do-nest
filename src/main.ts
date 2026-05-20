@@ -9,11 +9,7 @@ async function bootstrap(): Promise<void> {
 	const app = await NestFactory.create(AppModule);
 	const env = app.get(EnvService);
 
-	app.use(
-		cookieParser({
-			credentials: true,
-		}),
-	);
+	app.use(cookieParser());
 
 	app.useGlobalPipes(
 		new ValidationPipe({
