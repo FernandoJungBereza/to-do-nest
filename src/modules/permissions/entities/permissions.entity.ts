@@ -1,7 +1,8 @@
 import { UserEntity } from '@/modules/user/entities/user.entity';
 import { TimestampedEntity } from '@/shared/entities/timestamped-entity';
-import { Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
+@Entity('permissions')
 export class PermissionsEntity extends TimestampedEntity {
 	@Column({ type: 'varchar', length: 255 })
 	name: string;
