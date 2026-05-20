@@ -1,4 +1,4 @@
-import { PaginationSearchDto } from '@/shared/dtos/joins/pagination-search.dto';
+import { PaginationTitleAndNameDto } from '@/shared/dtos/joins/pagination-tilte-and-name.dto';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OutputPaginatedToDoListDto } from '../../dtos/output-paginated-to-do-list.dto';
@@ -13,7 +13,7 @@ export class GetPaginatedToDoListController {
 	@ApiOperation({ summary: 'Get paginated to-do lists for a user' })
 	@ApiResponse({ status: 200, description: 'To-do lists found', type: OutputPaginatedToDoListDto })
 	@ApiResponse({ status: 404, description: 'To-do lists not found' })
-	async getPaginatedToDoList(@Query() paginationSearchDto: PaginationSearchDto) {
-		return await this.getPaginatedToDoListUseCase.execute(paginationSearchDto);
+	async getPaginatedToDoList(@Query() paginationTitleAndNameDto: PaginationTitleAndNameDto) {
+		return await this.getPaginatedToDoListUseCase.execute(paginationTitleAndNameDto);
 	}
 }

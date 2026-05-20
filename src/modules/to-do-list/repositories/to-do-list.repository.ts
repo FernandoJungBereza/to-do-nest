@@ -1,5 +1,4 @@
-import { OutputPaginatedDto } from '@/shared/dtos/generics/output-paginated.dto';
-import { PaginationSearchDto } from '@/shared/dtos/joins/pagination-search.dto';
+import { PaginationTitleAndNameDto } from '@/shared/dtos/joins/pagination-tilte-and-name.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, FindOneOptions, Repository, UpdateResult } from 'typeorm';
@@ -22,7 +21,7 @@ export class ToDoListRepository implements ToDoListRepositoryAbstract {
 		return await this.toDoListRepository.findOne(criteria);
 	}
 
-	async findPaginated(paginationSearchDto: PaginationSearchDto): Promise<OutputPaginatedToDoListDto> {
+	async findPaginated(paginationTitleAndNameDto: PaginationTitleAndNameDto): Promise<OutputPaginatedToDoListDto> {
 		const toDoListQueryBuilder = this.toDoListRepository.createQueryBuilder('toDoList');
 		toDoListQueryBuilder.leftJoinAndSelect('toDoList.user', 'user');
 		toDoListQueryBuilder.select([
@@ -37,11 +36,24 @@ export class ToDoListRepository implements ToDoListRepositoryAbstract {
 			'user.email',
 		]);
 
-		toDoListQueryBuilder.skip((paginationSearchDto.page - 1) * paginationSearchDto.quantity);
-		toDoListQueryBuilder.take(paginationSearchDto.quantity);
-		if (paginationSearchDto.search) {
-			toDoListQueryBuilder.where('toDoList.title ILIKE :search', { search: `%${paginationSearchDto.search}%` });
+		toDoListQueryBuilder.skip((paginationTitleAndNameDto.page - 1) * paginationTitleAndNameDto.quantity);
+		toDoListQueryBuilder.take(paginationTitleAndNameDto.quantity);
+
+		if (paginationTitleAndNameDto.title && paginationTitleAndNameDto.name) {
+			toDoListQueryBuilder.where('toDoList.title ILIKE :title AND user.name ILIKE :name', {
+				title: `%${paginationTitleAndNameDto.title}%`,
+				name: `%${paginationTitleAndNameDto.name}%`,
+			});
+		} else if (paginationTitleAndNameDto.name) {
+			toDoListQueryBuilder.where('user.name ILIKE :name', {
+				name: `%${paginationTitleAndNameDto.name}%`,
+			});
+		} else if (paginationTitleAndNameDto.title) {
+			toDoListQueryBuilder.where('toDoList.title ILIKE :title', {
+				title: `%${paginationTitleAndNameDto.title}%`,
+			});
 		}
+
 		const [toDoLists, totalItems] = await toDoListQueryBuilder.getManyAndCount();
 		const data: OutputToDoListDto[] = toDoLists.map((toDoList) => ({
 			id: toDoList.id,
@@ -56,12 +68,13 @@ export class ToDoListRepository implements ToDoListRepositoryAbstract {
 				email: toDoList.user.email,
 			},
 		}));
-		return new OutputPaginatedDto<OutputToDoListDto>({
+
+		return new OutputPaginatedToDoListDto({
 			data,
-			currentPage: paginationSearchDto.page,
-			totalPages: Math.ceil(totalItems / paginationSearchDto.quantity),
+			currentPage: paginationTitleAndNameDto.page,
+			totalPages: Math.ceil(totalItems / paginationTitleAndNameDto.quantity),
 			totalItems,
-			itemsPerPage: paginationSearchDto.quantity,
+			itemsPerPage: paginationTitleAndNameDto.quantity,
 		});
 	}
 

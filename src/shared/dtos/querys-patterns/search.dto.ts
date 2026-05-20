@@ -3,8 +3,8 @@ import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class SearchDto {
 	@ApiPropertyOptional()
-	@IsOptional()
 	@IsString()
+	@IsOptional()
 	@IsNotEmpty()
 	search?: string;
 }
