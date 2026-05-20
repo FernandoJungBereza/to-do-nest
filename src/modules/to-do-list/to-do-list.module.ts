@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from '../user/entities/user.entity';
+import { UserModule } from '../user/user.module';
 import { ToDoListEntity } from './entities/to-do-list.entity';
 import { DeleteToDoListController } from './use-cases/delete-to-do-list/delete-to-do-list.controller';
 import { DeleteToDoListUseCase } from './use-cases/delete-to-do-list/delete-to-do-list.use-case';
@@ -15,7 +17,7 @@ import { UpdateToDoListController } from './use-cases/update-to-do-list/update-t
 import { UpdateToDoListUseCase } from './use-cases/update-to-do-list/update-to-do-list.use-case';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ToDoListEntity])],
+  imports: [TypeOrmModule.forFeature([ToDoListEntity, UserEntity]), UserModule],
   controllers: [
     GetAllToDoListController,
     GetOneToDoListByIdController,

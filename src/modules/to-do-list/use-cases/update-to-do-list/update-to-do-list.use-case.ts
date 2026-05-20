@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { GetOneUserByIdUseCase } from '@/modules/user/use-cases/get-one-user-by-id/get-one-user-by-id.use-case';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UpdateToDoListDto } from '../../dtos/update-to-do-list.dto';
@@ -11,6 +12,7 @@ export class UpdateToDoListUseCase {
     @InjectRepository(ToDoListEntity)
     private readonly toDoListRepository: Repository<ToDoListEntity>,
     private readonly getExistingToDoListUseCase: GetExistingToDoListUseCase,
+    private readonly getOneUserByIdUseCase: GetOneUserByIdUseCase,
   ) {}
 
   async execute(
@@ -21,9 +23,16 @@ export class UpdateToDoListUseCase {
       where: { id },
     });
 
+    const findUser = await this.getOneUserByIdUseCase.execute(
+      updateToDoListDto.userId,
+    );
+
+    if (!findUser) {
+      throw new NotFoundException('User not found');
+    }
+
     await this.toDoListRepository.update(toDoList.id, {
       ...updateToDoListDto,
-      updatedAt: new Date(),
     });
   }
 }

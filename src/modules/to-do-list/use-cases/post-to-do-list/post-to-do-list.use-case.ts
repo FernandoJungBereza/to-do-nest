@@ -22,8 +22,6 @@ export class PostToDoListUseCase {
 
     const toDoList = this.toDoListRepository.create({
       ...postToDoListDto,
-      updatedAt: new Date(),
-      createdAt: new Date(),
     });
     await this.toDoListRepository.save(toDoList);
   }
