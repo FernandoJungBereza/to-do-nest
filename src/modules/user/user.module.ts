@@ -30,8 +30,8 @@ import { AssignPermissionController } from './use-cases/assign-permission/assign
 	controllers: [
 		RestoreUserController,
 		DeleteUserController,
-		GetOneUserByIdController,
 		GetPaginatedUserController,
+		GetOneUserByIdController,
 		PostUserController,
 		UpdateUserController,
 		SoftDeleteUserController,
