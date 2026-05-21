@@ -12,6 +12,12 @@ export class PostPermissionUseCase {
 	) {}
 
 	async execute(postPermissionDto: PostPermissionDto): Promise<void> {
-		await this.permissionsRepository.save(this.permissionsRepository.create(postPermissionDto));
+		await this.permissionsRepository.save(
+			this.permissionsRepository.create({
+				name: postPermissionDto.name,
+				description: postPermissionDto.description,
+				permissionSlugs: postPermissionDto.permissionSlug.map((slug) => ({ slug })),
+			}),
+		);
 	}
 }
