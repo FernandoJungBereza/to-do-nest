@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { PermissionsEntity } from '../entities/permissions.entity';
 import { PermissionsRepositoryAbstract } from './permissions.repository.abstratct';
+import { OutputGetAllPermissionsDto } from '../dtos/output-get-all-permissions.dto';
 
 @Injectable()
 export class PermissionsRepository implements PermissionsRepositoryAbstract {
@@ -11,7 +12,7 @@ export class PermissionsRepository implements PermissionsRepositoryAbstract {
 		private readonly permissionsRepository: Repository<PermissionsEntity>,
 	) {}
 
-	async findAll(): Promise<PermissionsEntity[]> {
+	async findAll(): Promise<OutputGetAllPermissionsDto[]> {
 		return await this.permissionsRepository.find();
 	}
 

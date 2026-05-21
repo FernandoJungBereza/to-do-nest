@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PermissionsEntity } from '../../entities/permissions.entity';
+import { OutputGetAllPermissionsDto } from '../../dtos/output-get-all-permissions.dto';
 import { GetAllPermissionUseCase } from './get-all-permission.use-case';
 
 @ApiTags('Permissions')
@@ -10,7 +10,7 @@ export class GetAllPermissionController {
 
 	@Get()
 	@ApiOperation({ summary: 'Get all permissions' })
-	@ApiResponse({ status: 200, description: 'Permissions found', type: PermissionsEntity })
+	@ApiResponse({ status: 200, description: 'Permissions found', type: [OutputGetAllPermissionsDto] })
 	@ApiResponse({ status: 404, description: 'Permissions not found' })
 	async getAllPermissions() {
 		return await this.getAllPermissionUseCase.execute();
