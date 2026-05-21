@@ -1,17 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { PermissionRepositoryAbstractResponse } from '../interfaces/permission-repository-abstract-response';
 
-export class OutputGetAllPermissionsDto {
+export class OutputGetPermissionDto implements PermissionRepositoryAbstractResponse {
 	@ApiProperty({ description: 'The id of the permission' })
-	@IsString()
-	@IsNotEmpty()
 	id: string;
 	@ApiProperty({ description: 'The name of the permission' })
-	@IsString()
-	@IsNotEmpty()
 	name: string;
 	@ApiProperty({ description: 'The description of the permission' })
-	@IsString()
-	@IsNotEmpty()
 	description: string;
 }
