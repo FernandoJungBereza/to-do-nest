@@ -114,6 +114,7 @@ export class UserRepository implements UserRepositoryAbstract {
 				id: permissionUser.permission.id,
 				name: permissionUser.permission.name,
 				description: permissionUser.permission.description,
+				permissionSlug: permissionUser.permission.permissionSlug,
 			})),
 		};
 	}

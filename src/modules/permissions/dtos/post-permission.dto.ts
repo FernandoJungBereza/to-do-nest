@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import { PostPermissionDtoInterface } from '../interfaces/post-permission-dto.interface';
 
 export class PostPermissionDto implements PostPermissionDtoInterface {
@@ -32,4 +32,15 @@ export class PostPermissionDto implements PostPermissionDtoInterface {
 	@MaxLength(255)
 	@IsString()
 	description: string;
+
+	@ApiProperty({
+		description: 'The permission slug of the permission',
+		example: ['read', 'write', 'delete'],
+		required: true,
+		type: [String],
+	})
+	@IsArray()
+	@IsNotEmpty()
+	@IsString({ each: true })
+	permissionSlug: string[];
 }
