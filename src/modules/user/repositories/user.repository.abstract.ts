@@ -20,5 +20,6 @@ export abstract class UserRepositoryAbstract {
 	abstract restore(id: string): Promise<void>;
 	abstract findDeletedById(criteria: FindOneOptions<UserEntity>): Promise<UserEntity[]>;
 	abstract assignPermission(userId: string, permissionId: string): Promise<void>;
+	abstract isPermissionAssigned(userId: string, permissionId: string): Promise<boolean>;
 	abstract getPermissionsUserId(userId: string): Promise<OutputUserPermissionsDto>;
 }

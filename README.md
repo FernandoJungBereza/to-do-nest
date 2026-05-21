@@ -99,12 +99,34 @@ Fluxo resumido:
 
 Rotas **públicas** (sem JWT):
 
-| Método | Rota |
-|--------|------|
-| `POST` | `/auth/login` |
-| `POST` | `/auth/refresh-token` |
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `POST` | `/auth/login` | Login |
+| `POST` | `/auth/refresh-token` | Refresh token |
+| `POST` | `/users` | Cadastro (público) |
 
-Todas as outras rotas exigem autenticação válida.
+Demais rotas exigem JWT. Rotas com slug cadastrado em `permissions_slugs` exigem permissão (ou slug `admin`).
+
+## Permissões (RBAC por rota)
+
+Fluxo sugerido:
+
+1. Inserir permissão **Administrator** com slug `admin` e assign ao seu usuário (pgAdmin ou API).
+2. `GET /permissions/available-slugs` — rotas descobertas e slugs sugeridos.
+3. `POST /permissions` — `{ name, description, permissionSlug: ["user.create", ...] }` → grava slugs e remonta o manifest.
+4. `POST /users/:userId/permissions` — `{ permissionId }` assign.
+5. `POST /permissions/reload` — remonta manifest (somente admin).
+
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| `GET` | `/permissions/available-slugs` | Rotas + slugs sugeridos |
+| `POST` | `/permissions` | Criar permissão com slugs |
+| `GET` | `/permissions` | Listar permissões |
+| `GET` | `/permissions/:id` | Buscar permissão |
+| `DELETE` | `/permissions/:id` | Remover permissão |
+| `POST` | `/permissions/reload` | Rebuild manifest (admin) |
+| `POST` | `/users/:userId/permissions` | Assign permissão ao usuário |
+| `GET` | `/users/:userId/permissions` | Permissões do usuário (com slugs) |
 
 ## Endpoints
 
@@ -119,7 +141,7 @@ Todas as outras rotas exigem autenticação válida.
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| `POST` | `/users` | Criar usuário |
+| `POST` | `/users` | Criar usuário (público) |
 | `GET` | `/users` | Listar usuários |
 | `GET` | `/users/:id` | Buscar por ID |
 | `PATCH` | `/users/:id` | Atualizar |

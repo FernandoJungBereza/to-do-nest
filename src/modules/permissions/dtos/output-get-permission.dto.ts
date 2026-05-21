@@ -8,4 +8,7 @@ export class OutputGetPermissionDto implements PermissionRepositoryAbstractRespo
 	name: string;
 	@ApiProperty({ description: 'The description of the permission' })
 	description: string;
+
+	@ApiProperty({ description: 'Slugs linked to this permission', type: [String] })
+	slugs: string[];
 }

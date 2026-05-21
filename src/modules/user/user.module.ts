@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PermissionUserEntity } from '../permission-user/entities/permission-user.entity';
+import { PermissionsModule } from '../permissions/permissions.module';
 import { PermissionUserModule } from '../permission-user/permission-user.module';
+import { AssignPermissionController } from './use-cases/assign-permission/assign-permission.controller';
+import { AssignPermissionUseCase } from './use-cases/assign-permission/assign-permission.use-case';
 import { UserEntity } from './entities/user.entity';
 import { UserRepository } from './repositories/user.repository';
 import { UserRepositoryAbstract } from './repositories/user.repository.abstract';
@@ -26,7 +29,11 @@ import { UpdateUserController } from './use-cases/update-user/update-user.contro
 import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([UserEntity, PermissionUserEntity]), PermissionUserModule],
+	imports: [
+		TypeOrmModule.forFeature([UserEntity, PermissionUserEntity]),
+		PermissionUserModule,
+		PermissionsModule,
+	],
 	controllers: [
 		RestoreUserController,
 		DeleteUserController,
@@ -36,6 +43,7 @@ import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case'
 		UpdateUserController,
 		SoftDeleteUserController,
 		GetPermissionsUserIdController,
+		AssignPermissionController,
 	],
 	providers: [
 		RestoreUserUseCase,
@@ -50,6 +58,7 @@ import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case'
 		GetAllUsersUseCase,
 		DeleteUserUseCase,
 		GetPermissionsUserIdUseCase,
+		AssignPermissionUseCase,
 		{
 			provide: UserRepositoryAbstract,
 			useClass: UserRepository,
