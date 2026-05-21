@@ -1,23 +1,20 @@
-import { PermissionsRepositoryAbstract } from '@/modules/permissions/repositories/permissions.repository.abstratct';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { GetExistingPermissionUseCase } from '@/modules/permissions/use-cases/get-existing-permission.use-case';
+import { Injectable } from '@nestjs/common';
 import { UserRepositoryAbstract } from '../../repositories/user.repository.abstract';
+import { GetExistingUserUseCase } from '../get-existing-user.use-case';
 
 @Injectable()
 export class AssignPermissionUseCase {
 	constructor(
 		private readonly userRepository: UserRepositoryAbstract,
-		private readonly permissionRepository: PermissionsRepositoryAbstract,
+		private readonly getExistingPermissionUseCase: GetExistingPermissionUseCase,
+		private readonly getExistingUserUseCase: GetExistingUserUseCase,
 	) {}
 
 	async execute(userId: string, permissionId: string): Promise<void> {
-		const user = await this.userRepository.findOne({ where: { id: userId } });
-		const permission = await this.permissionRepository.findOne({ where: { id: permissionId } });
+		const user = await this.getExistingUserUseCase.execute({ where: { id: userId } });
+		const permission = await this.getExistingPermissionUseCase.execute({ where: { id: permissionId } });
 
-		if (!user || !permission) {
-			throw new NotFoundException('User or permission not found');
-		}
-
-		// user.permissions.push(permission);
-		// await this.userRepository.save(user);
+		await this.userRepository.assignPermission(userId, permissionId);
 	}
 }

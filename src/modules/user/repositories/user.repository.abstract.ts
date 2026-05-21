@@ -18,4 +18,5 @@ export abstract class UserRepositoryAbstract {
 	abstract softDelete(id: string): Promise<DeleteResult>;
 	abstract restore(id: string): Promise<void>;
 	abstract findDeletedById(criteria: FindOneOptions<UserEntity>): Promise<UserEntity[]>;
+	abstract assignPermission(userId: string, permissionId: string): Promise<void>;
 }

@@ -88,4 +88,13 @@ export class UserRepository implements UserRepositoryAbstract {
 			itemsPerPage: paginationNameAndEmailDto.quantity,
 		});
 	}
+
+	async assignPermission(userId: string, permissionId: string): Promise<void> {
+		await this.userRepository
+			.createQueryBuilder('user')
+			.leftJoinAndSelect('user.permissions', 'permission')
+			.where('user.id = :userId', { userId })
+			.andWhere('permission.id = :permissionId', { permissionId })
+			.execute();
+	}
 }

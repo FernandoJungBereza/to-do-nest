@@ -5,6 +5,7 @@ import { PermissionsModule } from '../permissions/permissions.module';
 import { UserEntity } from './entities/user.entity';
 import { UserRepository } from './repositories/user.repository';
 import { UserRepositoryAbstract } from './repositories/user.repository.abstract';
+import { AssignPermissionUseCase } from './use-cases/assign-permission/assign-permission.use-case';
 import { DeleteUserController } from './use-cases/delete-user/delete-user.controller';
 import { DeleteUserUseCase } from './use-cases/delete-user/delete-user.use-case';
 import { GetExistingDeletedUserUseCase } from './use-cases/get-existing-deleted-user.use-case';
@@ -22,6 +23,7 @@ import { SoftDeleteUserUseCase } from './use-cases/soft-delete-user/soft-delete-
 import { ThrowIfExistUserUseCase } from './use-cases/throw-if-exist-user.use-case';
 import { UpdateUserController } from './use-cases/update-user/update-user.controller';
 import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case';
+import { AssignPermissionController } from './use-cases/assign-permission/assign-permission.controller';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([UserEntity, PermissionsEntity]), PermissionsModule],
@@ -33,6 +35,7 @@ import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case'
 		PostUserController,
 		UpdateUserController,
 		SoftDeleteUserController,
+		AssignPermissionController,
 	],
 	providers: [
 		RestoreUserUseCase,
@@ -46,6 +49,7 @@ import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case'
 		UpdateUserUseCase,
 		GetAllUsersUseCase,
 		DeleteUserUseCase,
+		AssignPermissionUseCase,
 		{
 			provide: UserRepositoryAbstract,
 			useClass: UserRepository,
