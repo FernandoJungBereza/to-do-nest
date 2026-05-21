@@ -1,5 +1,4 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-
 import { EnvService } from './env';
 
 export function createTypeOrmConfig(env: EnvService): TypeOrmModuleOptions {
