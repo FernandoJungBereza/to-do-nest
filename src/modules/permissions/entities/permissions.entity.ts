@@ -1,6 +1,6 @@
-import { UserEntity } from '@/modules/user/entities/user.entity';
+import { PermissionUserEntity } from '@/modules/permission-user/entities/permission-user.entity';
 import { TimestampedEntity } from '@/shared/entities/timestamped-entity';
-import { Column, Entity, ManyToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('permissions')
 export class PermissionsEntity extends TimestampedEntity {
@@ -10,6 +10,6 @@ export class PermissionsEntity extends TimestampedEntity {
 	@Column({ type: 'varchar', length: 255 })
 	description: string;
 
-	@ManyToMany(() => UserEntity, (user) => user.permissions)
-	users: UserEntity[];
+	@OneToMany(() => PermissionUserEntity, (permissionUser) => permissionUser.permission)
+	permissionUsers: PermissionUserEntity[];
 }

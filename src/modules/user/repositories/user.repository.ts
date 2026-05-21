@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository, UpdateResult } from 'typeorm';
 import { DeleteResult } from 'typeorm/browser';
 import { OutputPaginatedUserDto } from '../dtos/output-paginated-user.dto';
+import { OutputUserPermissionsDto } from '../dtos/output-user-permissions.dto';
 import { OutputUserDto } from '../dtos/output-user.dto';
 import { PostUserDto } from '../dtos/post-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
@@ -96,5 +97,24 @@ export class UserRepository implements UserRepositoryAbstract {
 			.where('user.id = :userId', { userId })
 			.andWhere('permission.id = :permissionId', { permissionId })
 			.execute();
+	}
+
+	async getPermissionsUserId(userId: string): Promise<OutputUserPermissionsDto> {
+		const user = await this.userRepository
+			.createQueryBuilder('user')
+			.leftJoinAndSelect('user.permissionUsers', 'permissionUser')
+			.leftJoinAndSelect('permissionUser.permission', 'permission')
+			.where('user.id = :userId', { userId })
+			.getOneOrFail();
+
+		return {
+			id: user.id,
+			name: user.name,
+			permissions: user.permissionUsers.map((permissionUser) => ({
+				id: permissionUser.permission.id,
+				name: permissionUser.permission.name,
+				description: permissionUser.permission.description,
+			})),
+		};
 	}
 }
