@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PermissionsSlugsEntity } from './entities/permissions-slugs.entity';
 import { PermissionsEntity } from './entities/permissions.entity';
 import { PermissionsRepository } from './repositories/permissions.repository';
 import { PermissionsRepositoryAbstract } from './repositories/permissions.repository.abstratct';
@@ -12,7 +13,7 @@ import { PostPermissionController } from './use-cases/post-permission/post-permi
 import { PostPermissionUseCase } from './use-cases/post-permission/post-permission.use-case';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([PermissionsEntity])],
+	imports: [TypeOrmModule.forFeature([PermissionsEntity, PermissionsSlugsEntity])],
 	controllers: [PostPermissionController, GetAllPermissionController, FindOneByIdPermissionController],
 	providers: [
 		PostPermissionUseCase,
