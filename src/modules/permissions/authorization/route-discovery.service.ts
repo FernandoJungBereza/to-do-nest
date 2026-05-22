@@ -105,7 +105,6 @@ export class RouteDiscoveryService {
 				routes.push({
 					routeKey: `${httpMethod}:${path}`,
 					method: httpMethod,
-					path,
 					module,
 					slug: `${module}.${action}`,
 				});
