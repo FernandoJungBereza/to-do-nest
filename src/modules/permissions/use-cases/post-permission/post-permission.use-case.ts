@@ -1,20 +1,21 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PostPermissionDto } from '../../dtos/post-permission.dto';
-import { mapPermissionToOutput } from '../../helpers/map-permission-to-output.helper';
 import { PermissionsRepositoryAbstract } from '../../repositories/permissions.repository.abstract';
+import { ThrowIfExistPermissionUseCase } from '../throw-if-exist-permission.use-case';
 
 @Injectable()
 export class PostPermissionUseCase {
-	constructor(private readonly permissionsRepository: PermissionsRepositoryAbstract) {}
+	constructor(
+		private readonly permissionsRepository: PermissionsRepositoryAbstract,
+		private readonly throwIfExistPermissionUseCase: ThrowIfExistPermissionUseCase,
+	) {}
 
 	async execute(postPermissionDto: PostPermissionDto): Promise<void> {
-		if (await this.permissionsRepository.existsByName(postPermissionDto.name)) {
-			throw new ConflictException(`Permission "${postPermissionDto.name}" is already registered`);
-		}
+		await this.throwIfExistPermissionUseCase.execute({
+			where: { name: postPermissionDto.name },
+		});
 
 		const permission = await this.permissionsRepository.create(postPermissionDto);
-		const savedPermission = await this.permissionsRepository.save(permission);
-
-		return mapPermissionToOutput(savedPermission);
+		await this.permissionsRepository.save(permission);
 	}
 }

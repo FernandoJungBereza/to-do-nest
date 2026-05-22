@@ -17,6 +17,7 @@ import { GetAvailablePermissionsUseCase } from './use-cases/get-available-permis
 import { GetExistingPermissionUseCase } from './use-cases/get-existing-permission.use-case';
 import { PostPermissionController } from './use-cases/post-permission/post-permission.controller';
 import { PostPermissionUseCase } from './use-cases/post-permission/post-permission.use-case';
+import { ThrowIfExistPermissionUseCase } from './use-cases/throw-if-exist-permission.use-case';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([PermissionsEntity, PermissionUserEntity])],
@@ -31,6 +32,7 @@ import { PostPermissionUseCase } from './use-cases/post-permission/post-permissi
 		PermissionsAuthorizationService,
 		PermissionsGuard,
 		PostPermissionUseCase,
+		ThrowIfExistPermissionUseCase,
 		GetAllPermissionUseCase,
 		GetExistingPermissionUseCase,
 		FindOneByIdPermissionUseCase,

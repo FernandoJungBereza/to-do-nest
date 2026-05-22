@@ -7,7 +7,6 @@ import { PermissionsEntity } from '../entities/permissions.entity';
 export abstract class PermissionsRepositoryAbstract {
 	abstract findAll(): Promise<OutputGetPermissionDto[]>;
 	abstract findOne(criteria: FindOneOptions<PermissionsEntity>): Promise<OutputGetPermissionDto | null>;
-	abstract existsByName(name: string): Promise<boolean>;
 	abstract findRegisteredNames(): Promise<string[]>;
 	abstract create(postPermissionDto: PostPermissionDto): Promise<PermissionsEntity>;
 	abstract save(permission: PermissionsEntity): Promise<PermissionsEntity>;
