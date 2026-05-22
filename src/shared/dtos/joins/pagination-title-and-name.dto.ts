@@ -1,6 +1,6 @@
 import { IntersectionType } from '@nestjs/swagger';
-import { EmailDto } from '../query-patterns/email.dto';
 import { NameDto } from '../query-patterns/name.dto';
 import { PaginationDto } from '../query-patterns/pagination.dto';
+import { TitleDto } from '../query-patterns/title.dto';
 
-export class PaginationNameAndEmailDto extends IntersectionType(PaginationDto, NameDto, EmailDto) {}
+export class PaginationTitleAndNameDto extends IntersectionType(PaginationDto, TitleDto, NameDto) {}

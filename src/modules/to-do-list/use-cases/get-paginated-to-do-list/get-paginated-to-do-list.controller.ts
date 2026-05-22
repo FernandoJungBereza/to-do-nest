@@ -1,4 +1,4 @@
-import { PaginationTitleAndNameDto } from '@/shared/dtos/joins/pagination-tilte-and-name.dto';
+import { PaginationTitleAndNameDto } from '@/shared/dtos/joins/pagination-title-and-name.dto';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OutputPaginatedToDoListDto } from '../../dtos/output-paginated-to-do-list.dto';

@@ -1,7 +1,7 @@
 import { PaginationNameAndEmailDto } from '@/shared/dtos/joins/pagination-name-and-email.dto';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { GetAllUsersUseCase as GetPaginatedUsersUseCase } from './get-paginated-users.use-case';
+import { GetPaginatedUsersUseCase } from './get-paginated-users.use-case';
 import { OutputPaginatedUserDto } from '../../dtos/output-paginated-user.dto';
 
 @ApiTags('Users')

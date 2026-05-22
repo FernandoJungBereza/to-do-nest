@@ -4,7 +4,7 @@ import { OutputPaginatedUserDto } from '../../dtos/output-paginated-user.dto';
 import { UserRepositoryAbstract } from '../../repositories/user.repository.abstract';
 
 @Injectable()
-export class GetAllUsersUseCase {
+export class GetPaginatedUsersUseCase {
 	constructor(private readonly userRepository: UserRepositoryAbstract) {}
 
 	async execute(paginationNameAndEmailDto: PaginationNameAndEmailDto): Promise<OutputPaginatedUserDto> {

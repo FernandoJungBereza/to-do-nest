@@ -1,23 +1,20 @@
-import { UserEntity } from '@/modules/user/entities/user.entity';
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { UserRepositoryAbstract } from '@/modules/user/repositories/user.repository.abstract';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
 import { compare } from 'bcrypt';
-import { Repository } from 'typeorm';
 import { LoginDto } from '../../dtos/login.dto';
 
 @Injectable()
 export class LoginUseCase {
 	constructor(
-		@InjectRepository(UserEntity)
-		private readonly userRepository: Repository<UserEntity>,
+		private readonly userRepository: UserRepositoryAbstract,
 		private readonly jwtService: JwtService,
 		private readonly configService: ConfigService,
 	) {}
 
 	async execute(loginDto: LoginDto): Promise<{
-		user: Pick<UserEntity, 'id' | 'name' | 'email'>;
+		user: { id: string; name: string; email: string };
 		access_token: string;
 		refresh_token: string;
 	}> {
@@ -26,13 +23,13 @@ export class LoginUseCase {
 		});
 
 		if (!user) {
-			throw new NotFoundException('User not found');
+			throw new UnauthorizedException('Invalid credentials');
 		}
 
 		const comparePassword = await compare(loginDto.password, user.password);
 
 		if (!comparePassword) {
-			throw new UnauthorizedException('Password is incorrect');
+			throw new UnauthorizedException('Invalid credentials');
 		}
 
 		return {

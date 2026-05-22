@@ -1,4 +1,4 @@
-import { PaginationTitleAndNameDto } from '@/shared/dtos/joins/pagination-tilte-and-name.dto';
+import { PaginationTitleAndNameDto } from '@/shared/dtos/joins/pagination-title-and-name.dto';
 import { DeleteResult, FindOneOptions, UpdateResult } from 'typeorm';
 import { OutputPaginatedToDoListDto } from '../dtos/output-paginated-to-do-list.dto';
 import { PostToDoListDto } from '../dtos/post-to-do-list.dto';

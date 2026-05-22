@@ -1,7 +1,7 @@
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OutputToDoListDto } from '../../dtos/output-to-do-list.dto';
-import { GetOneToDoListByIdUseCase } from './get-one-to-do-list-by-userId.use-case';
+import { GetOneToDoListByIdUseCase } from './get-one-to-do-list-by-id.use-case';
 
 @ApiTags('To-do Lists')
 @Controller('to-do-lists')

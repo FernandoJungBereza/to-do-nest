@@ -1,3 +1,4 @@
+import { EnvService } from '@/config/env';
 import { setAuthCookies } from '@/modules/auth/helpers/auth-cookies.helper';
 import { Body, Controller, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -9,7 +10,10 @@ import { RefreshTokenUseCase } from './refresh-token.use-case';
 @ApiTags('Auth')
 @Controller('auth')
 export class RefreshTokenController {
-	constructor(private readonly refreshTokenUseCase: RefreshTokenUseCase) {}
+	constructor(
+		private readonly refreshTokenUseCase: RefreshTokenUseCase,
+		private readonly env: EnvService,
+	) {}
 
 	@Public()
 	@Post('refresh-token')
@@ -29,7 +33,7 @@ export class RefreshTokenController {
 
 		const { access_token, refresh_token } = await this.refreshTokenUseCase.execute(refreshToken);
 
-		setAuthCookies(res, access_token, refresh_token);
+		setAuthCookies(res, access_token, refresh_token, { secure: this.env.isProduction });
 
 		return { access_token };
 	}

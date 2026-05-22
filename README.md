@@ -217,7 +217,7 @@ src/
 │   ├── auth/               # login, refresh, JWT strategy, guards
 │   ├── user/               # CRUD, paginação, soft delete e assign de permissões
 │   ├── permissions/        # RBAC, manifest, descoberta de rotas e slugs
-│   ├── permission-user/    # vínculo usuário ↔ permissão (entity)
+│   ├── permission-user/    # entity do vínculo usuário ↔ permissão
 │   └── to-do-list/         # CRUD e paginação de listas
 └── shared/                 # entities base, DTOs e helpers comuns
 ```
@@ -237,7 +237,7 @@ O módulo `permissions` inclui ainda `authorization/` (manifest, descoberta de r
 - **Use cases** concentram regra de negócio e orquestram repositories.
 - **Repositories** acessam o banco; não devem conter regra de negócio.
 - **Entities** não são expostas diretamente nas respostas públicas da API.
-- **`process.env`** no código da aplicação é evitado; configuração passa por `ConfigModule` / `EnvService`, exceto no datasource CLI (`typeorm.datasource.ts`).
+- **`process.env`** no código da aplicação é evitado; configuração passa por `ConfigModule` / `EnvService`, exceto no datasource CLI (`typeorm.datasource.ts`). Cookies de auth usam `EnvService.isProduction` para o flag `secure`.
 
 ## Modelo de dados
 

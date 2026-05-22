@@ -1,4 +1,4 @@
-import { PaginationTitleAndNameDto } from '@/shared/dtos/joins/pagination-tilte-and-name.dto';
+import { PaginationTitleAndNameDto } from '@/shared/dtos/joins/pagination-title-and-name.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, FindOneOptions, Repository, UpdateResult } from 'typeorm';

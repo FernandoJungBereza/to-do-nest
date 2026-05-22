@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PermissionUserEntity } from '../permission-user/entities/permission-user.entity';
 import { PermissionsModule } from '../permissions/permissions.module';
-import { PermissionUserModule } from '../permission-user/permission-user.module';
 import { AssignPermissionController } from './use-cases/assign-permission/assign-permission.controller';
 import { AssignPermissionUseCase } from './use-cases/assign-permission/assign-permission.use-case';
 import { UserEntity } from './entities/user.entity';
@@ -15,7 +14,7 @@ import { GetExistingUserUseCase } from './use-cases/get-existing-user.use-case';
 import { GetOneUserByIdController } from './use-cases/get-one-user-by-id/get-one-user-by-id.controller';
 import { GetOneUserByIdUseCase } from './use-cases/get-one-user-by-id/get-one-user-by-id.use-case';
 import { GetPaginatedUserController } from './use-cases/get-paginated-users/get-paginated-users.controller';
-import { GetAllUsersUseCase } from './use-cases/get-paginated-users/get-paginated-users.use-case';
+import { GetPaginatedUsersUseCase } from './use-cases/get-paginated-users/get-paginated-users.use-case';
 import { GetPermissionsUserIdController } from './use-cases/get-permissions-user-by-id/get-permissions-user-by-id.controller';
 import { GetPermissionsUserIdUseCase } from './use-cases/get-permissions-user-by-id/get-permissions-user-by-id.use-case';
 import { PostUserController } from './use-cases/post-user/post-user.controller';
@@ -29,11 +28,7 @@ import { UpdateUserController } from './use-cases/update-user/update-user.contro
 import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case';
 
 @Module({
-	imports: [
-		TypeOrmModule.forFeature([UserEntity, PermissionUserEntity]),
-		PermissionUserModule,
-		PermissionsModule,
-	],
+	imports: [TypeOrmModule.forFeature([UserEntity, PermissionUserEntity]), PermissionsModule],
 	controllers: [
 		RestoreUserController,
 		DeleteUserController,
@@ -54,8 +49,7 @@ import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case'
 		ThrowIfExistUserUseCase,
 		GetOneUserByIdUseCase,
 		GetExistingUserUseCase,
-		UpdateUserUseCase,
-		GetAllUsersUseCase,
+		GetPaginatedUsersUseCase,
 		DeleteUserUseCase,
 		GetPermissionsUserIdUseCase,
 		AssignPermissionUseCase,
@@ -64,6 +58,6 @@ import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case'
 			useClass: UserRepository,
 		},
 	],
-	exports: [GetOneUserByIdUseCase],
+	exports: [GetOneUserByIdUseCase, UserRepositoryAbstract],
 })
 export class UserModule {}

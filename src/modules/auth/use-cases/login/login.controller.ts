@@ -1,3 +1,4 @@
+import { EnvService } from '@/config/env';
 import { LoginDto } from '@/modules/auth/dtos/login.dto';
 import { setAuthCookies } from '@/modules/auth/helpers/auth-cookies.helper';
 import { Body, Controller, Post, Res } from '@nestjs/common';
@@ -7,19 +8,22 @@ import { Public } from '../../decorator/public.decorator';
 import { LoginUseCase } from './login.use-case';
 
 @ApiTags('Auth')
-@Controller('auth/login')
+@Controller('auth')
 export class LoginController {
-	constructor(private readonly loginUseCase: LoginUseCase) {}
+	constructor(
+		private readonly loginUseCase: LoginUseCase,
+		private readonly env: EnvService,
+	) {}
 
 	@Public()
-	@Post()
+	@Post('login')
 	@ApiOperation({ summary: 'Login a user' })
 	@ApiResponse({ status: 200, description: 'User logged in' })
 	@ApiResponse({ status: 401, description: 'Unauthorized' })
 	async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) {
 		const { user, access_token, refresh_token } = await this.loginUseCase.execute(loginDto);
 
-		setAuthCookies(res, access_token, refresh_token);
+		setAuthCookies(res, access_token, refresh_token, { secure: this.env.isProduction });
 
 		return {
 			user,
