@@ -1,7 +1,8 @@
+import { PermissionsAuthorizationService } from '@/modules/permissions/authorization/permissions-authorization.service';
 import { ConflictException, Injectable } from '@nestjs/common';
+import { GetExistingPermissionUseCase } from '@/modules/permissions/use-cases/get-existing-permission.use-case';
 import { UserRepositoryAbstract } from '../../repositories/user.repository.abstract';
 import { GetExistingUserUseCase } from '../get-existing-user.use-case';
-import { GetExistingPermissionUseCase } from '@/modules/permissions/use-cases/get-existing-permission.use-case';
 
 @Injectable()
 export class AssignPermissionUseCase {
@@ -9,9 +10,15 @@ export class AssignPermissionUseCase {
 		private readonly userRepository: UserRepositoryAbstract,
 		private readonly getExistingUserUseCase: GetExistingUserUseCase,
 		private readonly getExistingPermissionUseCase: GetExistingPermissionUseCase,
+		private readonly permissionsAuthorizationService: PermissionsAuthorizationService,
 	) {}
 
-	async execute(userId: string, permissionId: string): Promise<void> {
+	async execute(actorUserId: string, userId: string, permissionId: string): Promise<void> {
+		await this.permissionsAuthorizationService.assertUserIsAdmin(
+			actorUserId,
+			'Only admin can assign permissions to users',
+		);
+
 		await this.getExistingUserUseCase.execute({ where: { id: userId } });
 		await this.getExistingPermissionUseCase.execute({ where: { id: permissionId } });
 
