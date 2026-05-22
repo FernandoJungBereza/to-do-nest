@@ -15,6 +15,13 @@ function humanizeModule(module: string): string {
 	return module.replace(/-/g, ' ');
 }
 
+export function formatModuleDisplayName(module: string): string {
+	return humanizeModule(module)
+		.split(' ')
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ');
+}
+
 function resourceLabel(module: string, action: string): string {
 	const base = humanizeModule(module);
 

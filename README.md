@@ -112,7 +112,7 @@ Demais rotas exigem JWT. Rotas com slug cadastrado em `permissions_slugs` exigem
 Fluxo sugerido:
 
 1. Inserir permissão **Administrator** com slug `admin` e assign ao seu usuário (pgAdmin ou API).
-2. `GET /permissions/available-slugs` — slugs sugeridos (method, module, slug, title, description).
+2. `GET /permissions/available-slugs` — slugs únicos agrupados por módulo (`modules[].name`, `modules[].routes`).
 3. `POST /permissions` — `{ name, description, permissionSlug: ["user.create", ...] }` → grava slugs e remonta o manifest.
 4. `POST /users/:userId/permissions` — `{ permissionId }` assign.
 5. `POST /permissions/reload` — remonta manifest (somente admin).

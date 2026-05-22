@@ -4,9 +4,6 @@ export class OutputAvailableSlugRouteDto {
 	@ApiProperty({ example: 'POST' })
 	method: string;
 
-	@ApiProperty({ example: 'user' })
-	module: string;
-
 	@ApiProperty({ example: 'user.create', description: 'Canonical permission slug for this route' })
 	slug: string;
 
@@ -20,7 +17,15 @@ export class OutputAvailableSlugRouteDto {
 	description: string;
 }
 
-export class OutputAvailableSlugsDto {
+export class OutputAvailableSlugModuleDto {
+	@ApiProperty({ example: 'User', description: 'Display name of the Nest module' })
+	name: string;
+
 	@ApiProperty({ type: [OutputAvailableSlugRouteDto] })
 	routes: OutputAvailableSlugRouteDto[];
+}
+
+export class OutputAvailableSlugsDto {
+	@ApiProperty({ type: [OutputAvailableSlugModuleDto] })
+	modules: OutputAvailableSlugModuleDto[];
 }
