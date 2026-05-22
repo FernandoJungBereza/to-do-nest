@@ -1,11 +1,9 @@
-import { PermissionUserEntity } from '@/modules/permission-user/entities/permission-user.entity';
 import { PaginationNameAndEmailDto } from '@/shared/dtos/joins/pagination-name-and-email.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository, UpdateResult } from 'typeorm';
 import { DeleteResult } from 'typeorm/browser';
 import { OutputPaginatedUserDto } from '../dtos/output-paginated-user.dto';
-import { OutputUserPermissionsDto } from '../dtos/output-user-permissions.dto';
 import { OutputUserDto } from '../dtos/output-user.dto';
 import { PostUserDto } from '../dtos/post-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
@@ -18,8 +16,6 @@ export class UserRepository implements UserRepositoryAbstract {
 	constructor(
 		@InjectRepository(UserEntity)
 		private readonly userRepository: Repository<UserEntity>,
-		@InjectRepository(PermissionUserEntity)
-		private readonly permissionUserRepository: Repository<PermissionUserEntity>,
 	) {}
 
 	async findOne(criteria: FindOneOptions<UserEntity>): Promise<UserRepositoryAbstractResponse | null> {
@@ -91,43 +87,5 @@ export class UserRepository implements UserRepositoryAbstract {
 			totalItems,
 			itemsPerPage: paginationNameAndEmailDto.quantity,
 		});
-	}
-
-	async assignPermission(userId: string, permissionId: string): Promise<void> {
-		await this.permissionUserRepository.save(
-			this.permissionUserRepository.create({
-				userId,
-				permissionId,
-			}),
-		);
-	}
-
-	async isPermissionAssigned(userId: string, permissionId: string): Promise<boolean> {
-		return await this.permissionUserRepository.exists({
-			where: { userId, permissionId },
-		});
-	}
-
-	async getPermissionsUserId(userId: string): Promise<OutputUserPermissionsDto> {
-		const user = await this.userRepository
-			.createQueryBuilder('user')
-			.leftJoinAndSelect('user.permissionUsers', 'permissionUser')
-			.leftJoinAndSelect('permissionUser.permission', 'permission')
-			.leftJoinAndSelect('permission.permissionSlugs', 'permissionSlug')
-			.where('user.id = :userId', { userId })
-			.getOneOrFail();
-
-		return {
-			id: user.id,
-			name: user.name,
-			permissions: user.permissionUsers.map((permissionUser) => ({
-				id: permissionUser.permission.id,
-				name: permissionUser.permission.name,
-				description: permissionUser.permission.description,
-				slugs: permissionUser.permission.permissionSlugs.map(
-					(permissionSlug) => permissionSlug.slug,
-				),
-			})),
-		};
 	}
 }

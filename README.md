@@ -117,7 +117,7 @@ Fluxo sugerido para o primeiro acesso administrativo:
 1. Criar permissão **Administrator** com slug `admin` e assign ao seu usuário (pgAdmin ou API).
 2. `GET /permissions/available-slugs` — slugs sugeridos agrupados por módulo (`modules[].name`, `modules[].routes`).
 3. `POST /permissions` — `{ "name", "description", "permissionSlug": ["user.create", ...] }` — persiste a permissão, os slugs e remonta o manifest.
-4. `POST /users/:userId/permissions` — `{ "permissionId" }` — vincula permissão ao usuário.
+4. `POST /users/:id/permissions` — `{ "permissionId" }` — vincula permissão ao usuário.
 5. `POST /permissions/reload` — remonta o manifest manualmente (requer slug `admin`).
 
 | Método | Rota | Descrição |
@@ -128,8 +128,8 @@ Fluxo sugerido para o primeiro acesso administrativo:
 | `GET` | `/permissions/:id` | Buscar permissão por ID |
 | `DELETE` | `/permissions/:id` | Remover permissão |
 | `POST` | `/permissions/reload` | Rebuild do manifest (admin) |
-| `POST` | `/users/:userId/permissions` | Assign de permissão ao usuário |
-| `GET` | `/users/:userId/permissions` | Permissões do usuário (com slugs) |
+| `POST` | `/users/:id/permissions` | Assign de permissão ao usuário |
+| `GET` | `/users/:id/permissions` | Permissões do usuário (com slugs) |
 
 ## Endpoints
 
@@ -149,10 +149,10 @@ Fluxo sugerido para o primeiro acesso administrativo:
 | `GET` | `/users/:id` | Buscar por ID |
 | `PATCH` | `/users/:id` | Atualizar |
 | `DELETE` | `/users/:id` | Excluir permanentemente |
-| `DELETE` | `/users/:id/soft-delete` | Soft delete (`deleted_at`) |
-| `POST` | `/users/:id/restore/deleted` | Restaurar usuário soft-deleted |
-| `POST` | `/users/:userId/permissions` | Assign de permissão |
-| `GET` | `/users/:userId/permissions` | Permissões do usuário |
+| `DELETE` | `/users/:id/soft` | Soft delete (`deleted_at`) |
+| `POST` | `/users/:id/restore` | Restaurar usuário soft-deleted |
+| `POST` | `/users/:id/permissions` | Assign de permissão |
+| `GET` | `/users/:id/permissions` | Permissões do usuário |
 
 ### To-do lists
 
@@ -217,7 +217,7 @@ src/
 │   ├── auth/               # login, refresh, JWT strategy, guards
 │   ├── user/               # CRUD, paginação, soft delete e assign de permissões
 │   ├── permissions/        # RBAC, manifest, descoberta de rotas e slugs
-│   ├── permission-user/    # entity do vínculo usuário ↔ permissão
+│   ├── permission-user/    # vínculo usuário ↔ permissão (entity + repository)
 │   └── to-do-list/         # CRUD e paginação de listas
 └── shared/                 # entities base, DTOs e helpers comuns
 ```
@@ -237,7 +237,7 @@ O módulo `permissions` inclui ainda `authorization/` (manifest, descoberta de r
 - **Use cases** concentram regra de negócio e orquestram repositories.
 - **Repositories** acessam o banco; não devem conter regra de negócio.
 - **Entities** não são expostas diretamente nas respostas públicas da API.
-- **`process.env`** no código da aplicação é evitado; configuração passa por `ConfigModule` / `EnvService`, exceto no datasource CLI (`typeorm.datasource.ts`). Cookies de auth usam `EnvService.isProduction` para o flag `secure`.
+- **`process.env`** no código da aplicação é evitado; configuração passa por `EnvModule` / `EnvService` (incluindo JWT), exceto no datasource CLI (`typeorm.datasource.ts`). Cookies de auth usam `EnvService.isProduction` para o flag `secure`.
 
 ## Modelo de dados
 

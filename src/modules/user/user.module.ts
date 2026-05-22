@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PermissionUserEntity } from '../permission-user/entities/permission-user.entity';
+import { PermissionUserModule } from '../permission-user/permission-user.module';
 import { PermissionsModule } from '../permissions/permissions.module';
 import { AssignPermissionController } from './use-cases/assign-permission/assign-permission.controller';
 import { AssignPermissionUseCase } from './use-cases/assign-permission/assign-permission.use-case';
@@ -28,7 +28,7 @@ import { UpdateUserController } from './use-cases/update-user/update-user.contro
 import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([UserEntity, PermissionUserEntity]), PermissionsModule],
+	imports: [TypeOrmModule.forFeature([UserEntity]), PermissionUserModule, PermissionsModule],
 	controllers: [
 		RestoreUserController,
 		DeleteUserController,

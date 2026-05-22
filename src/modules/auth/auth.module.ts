@@ -1,5 +1,5 @@
+import { EnvModule, EnvService } from '@/config/env';
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../user/user.module';
@@ -12,11 +12,13 @@ import { RefreshTokenUseCase } from './use-cases/refresh-token/refresh-token.use
 
 @Module({
 	imports: [
+		EnvModule,
 		PassportModule.register({ defaultStrategy: 'jwt' }),
 		JwtModule.registerAsync({
-			inject: [ConfigService],
-			useFactory: (configService: ConfigService) => ({
-				secret: configService.getOrThrow<string>('JWT_SECRET'),
+			imports: [EnvModule],
+			inject: [EnvService],
+			useFactory: (env: EnvService) => ({
+				secret: env.jwtSecret,
 				signOptions: { expiresIn: '1h' },
 			}),
 		}),

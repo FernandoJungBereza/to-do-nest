@@ -7,7 +7,7 @@ import { RestoreUserUseCase } from './restore-user.use-case';
 export class RestoreUserController {
 	constructor(private readonly restoreUserUseCase: RestoreUserUseCase) {}
 
-	@Post(':id/restore/deleted')
+	@Post(':id/restore')
 	@ApiOperation({ summary: 'Restore a user by ID' })
 	@ApiResponse({ status: 200, description: 'User restored' })
 	@ApiResponse({ status: 404, description: 'User not found' })

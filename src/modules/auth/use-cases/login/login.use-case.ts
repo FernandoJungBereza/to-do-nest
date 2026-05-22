@@ -1,6 +1,6 @@
+import { EnvService } from '@/config/env';
 import { UserRepositoryAbstract } from '@/modules/user/repositories/user.repository.abstract';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import { LoginDto } from '../../dtos/login.dto';
@@ -10,7 +10,7 @@ export class LoginUseCase {
 	constructor(
 		private readonly userRepository: UserRepositoryAbstract,
 		private readonly jwtService: JwtService,
-		private readonly configService: ConfigService,
+		private readonly env: EnvService,
 	) {}
 
 	async execute(loginDto: LoginDto): Promise<{
@@ -42,7 +42,7 @@ export class LoginUseCase {
 			refresh_token: this.jwtService.sign(
 				{ userId: user.id },
 				{
-					secret: this.configService.getOrThrow<string>('JWT_REFRESH'),
+					secret: this.env.jwtRefresh,
 					expiresIn: '7d',
 				},
 			),

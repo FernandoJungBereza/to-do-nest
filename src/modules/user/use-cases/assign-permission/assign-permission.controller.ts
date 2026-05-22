@@ -9,7 +9,7 @@ import { AssignPermissionUseCase } from './assign-permission.use-case';
 export class AssignPermissionController {
 	constructor(private readonly assignPermissionUseCase: AssignPermissionUseCase) {}
 
-	@Post(':userId/permissions')
+	@Post(':id/permissions')
 	@ApiOperation({ summary: 'Assign a permission to a user (admin only)' })
 	@ApiResponse({ status: 201, description: 'Permission assigned' })
 	@ApiResponse({ status: 403, description: 'Forbidden' })
@@ -17,12 +17,12 @@ export class AssignPermissionController {
 	@ApiResponse({ status: 409, description: 'Permission already assigned' })
 	async assignPermission(
 		@Req() request: AuthenticatedRequest,
-		@Param('userId', ParseUUIDPipe) userId: string,
+		@Param('id', ParseUUIDPipe) id: string,
 		@Body() assignPermissionDto: AssignPermissionDto,
 	) {
 		await this.assignPermissionUseCase.execute(
 			request.user.userId,
-			userId,
+			id,
 			assignPermissionDto.permissionId,
 		);
 	}

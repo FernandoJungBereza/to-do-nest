@@ -2,7 +2,6 @@ import { PaginationNameAndEmailDto } from '@/shared/dtos/joins/pagination-name-a
 import { FindOneOptions } from 'typeorm';
 import { DeleteResult, UpdateResult } from 'typeorm/browser';
 import { OutputPaginatedUserDto } from '../dtos/output-paginated-user.dto';
-import { OutputUserPermissionsDto } from '../dtos/output-user-permissions.dto';
 import { PostUserDto } from '../dtos/post-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
@@ -18,7 +17,4 @@ export abstract class UserRepositoryAbstract {
 	abstract softDelete(id: string): Promise<DeleteResult>;
 	abstract restore(id: string): Promise<void>;
 	abstract findDeletedById(criteria: FindOneOptions<UserEntity>): Promise<UserEntity[]>;
-	abstract assignPermission(userId: string, permissionId: string): Promise<void>;
-	abstract isPermissionAssigned(userId: string, permissionId: string): Promise<boolean>;
-	abstract getPermissionsUserId(userId: string): Promise<OutputUserPermissionsDto>;
 }

@@ -37,6 +37,14 @@ export class EnvService {
 		return this.configService.getOrThrow<string>('DB_SCHEMA');
 	}
 
+	get jwtSecret(): string {
+		return this.configService.getOrThrow<string>('JWT_SECRET');
+	}
+
+	get jwtRefresh(): string {
+		return this.configService.getOrThrow<string>('JWT_REFRESH');
+	}
+
 	get isDevelopment(): boolean {
 		return this.nodeEnv === 'development';
 	}

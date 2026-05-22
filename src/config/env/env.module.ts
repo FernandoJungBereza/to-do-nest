@@ -6,13 +6,14 @@ import { validateEnv } from './env.validation';
 
 @Global()
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      validate: validateEnv,
-    }),
-  ],
-  providers: [EnvService],
-  exports: [EnvService],
+	imports: [
+		ConfigModule.forRoot({
+			isGlobal: true,
+			envFilePath: '.env',
+			validate: validateEnv,
+		}),
+	],
+	providers: [EnvService],
+	exports: [EnvService],
 })
 export class EnvModule {}

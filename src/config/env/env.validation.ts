@@ -50,6 +50,16 @@ export class EnvironmentVariables {
 	@IsString()
 	@IsNotEmpty()
 	DB_SCHEMA: string;
+
+	@Expose()
+	@IsString()
+	@IsNotEmpty()
+	JWT_SECRET: string;
+
+	@Expose()
+	@IsString()
+	@IsNotEmpty()
+	JWT_REFRESH: string;
 }
 
 export function validateEnv(config: Record<string, unknown>): EnvironmentVariables {

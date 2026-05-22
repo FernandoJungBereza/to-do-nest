@@ -1,14 +1,14 @@
+import { EnvService } from '@/config/env';
 import { JwtPayload } from '@/modules/auth/interfaces/jwt-payload.interface';
 import { GetOneUserByIdUseCase } from '@/modules/user/use-cases/get-one-user-by-id/get-one-user-by-id.use-case';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class RefreshTokenUseCase {
 	constructor(
 		private readonly jwtService: JwtService,
-		private readonly configService: ConfigService,
+		private readonly env: EnvService,
 		private readonly getOneUserByIdUseCase: GetOneUserByIdUseCase,
 	) {}
 
@@ -17,18 +17,20 @@ export class RefreshTokenUseCase {
 		refresh_token: string;
 	}> {
 		const decoded = this.jwtService.verify<JwtPayload>(refreshToken, {
-			secret: this.configService.getOrThrow<string>('JWT_REFRESH'),
+			secret: this.env.jwtRefresh,
 		});
 		if (!decoded) {
 			throw new UnauthorizedException('Invalid refresh token');
 		}
 
 		const user = await this.getOneUserByIdUseCase.execute(decoded.userId);
-		const refreshSecret = this.configService.getOrThrow<string>('JWT_REFRESH');
 
 		return {
 			access_token: this.jwtService.sign({ userId: user.id }, { expiresIn: '1h' }),
-			refresh_token: this.jwtService.sign({ userId: user.id }, { secret: refreshSecret, expiresIn: '7d' }),
+			refresh_token: this.jwtService.sign(
+				{ userId: user.id },
+				{ secret: this.env.jwtRefresh, expiresIn: '7d' },
+			),
 		};
 	}
 }
