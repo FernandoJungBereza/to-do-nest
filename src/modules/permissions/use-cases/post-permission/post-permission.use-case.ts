@@ -1,26 +1,23 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { RouteDiscoveryService } from '../../authorization/route-discovery.service';
 import { RouteManifestService } from '../../authorization/route-manifest.service';
+import { OutputGetPermissionDto } from '../../dtos/output-get-permission.dto';
 import { PostPermissionDto } from '../../dtos/post-permission.dto';
-import { PermissionsEntity } from '../../entities/permissions.entity';
+import { mapPermissionToOutput } from '../../helpers/map-permission-to-output.helper';
+import { PermissionsRepositoryAbstract } from '../../repositories/permissions.repository.abstratct';
 import { PermissionsSlugsRepositoryAbstract } from '../../repositories/permissions-slugs.repository.abstract';
 
 @Injectable()
 export class PostPermissionUseCase {
 	constructor(
-		@InjectRepository(PermissionsEntity)
-		private readonly permissionsRepository: Repository<PermissionsEntity>,
 		private readonly routeDiscoveryService: RouteDiscoveryService,
 		private readonly permissionsSlugsRepository: PermissionsSlugsRepositoryAbstract,
+		private readonly permissionsRepository: PermissionsRepositoryAbstract,
 		private readonly routeManifestService: RouteManifestService,
 	) {}
 
-	async execute(postPermissionDto: PostPermissionDto): Promise<void> {
-		const validSlugs = new Set(
-			this.routeDiscoveryService.discover().map((route) => route.slug),
-		);
+	async execute(postPermissionDto: PostPermissionDto): Promise<OutputGetPermissionDto> {
+		const validSlugs = new Set(this.routeDiscoveryService.discover().map((route) => route.slug));
 
 		const invalidSlugs = postPermissionDto.permissionSlug.filter((slug) => !validSlugs.has(slug));
 
@@ -34,14 +31,11 @@ export class PostPermissionUseCase {
 			}
 		}
 
-		await this.permissionsRepository.save(
-			this.permissionsRepository.create({
-				name: postPermissionDto.name,
-				description: postPermissionDto.description,
-				permissionSlugs: postPermissionDto.permissionSlug.map((slug) => ({ slug })),
-			}),
-		);
+		const permission = await this.permissionsRepository.create(postPermissionDto);
+		const savedPermission = await this.permissionsRepository.save(permission);
 
 		await this.routeManifestService.rebuild();
+
+		return mapPermissionToOutput(savedPermission);
 	}
 }

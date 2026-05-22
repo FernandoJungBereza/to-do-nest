@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { PermissionsEntity } from '../../entities/permissions.entity';
+import { PermissionsRepositoryAbstract } from '../../repositories/permissions.repository.abstratct';
+import { PermissionRepositoryAbstractResponse } from '../../interfaces/permission-repository-abstract-response';
 
 @Injectable()
 export class GetAllPermissionUseCase {
-	constructor(
-		@InjectRepository(PermissionsEntity)
-		private readonly permissionsRepository: Repository<PermissionsEntity>,
-	) {}
+	constructor(private readonly permissionsRepository: PermissionsRepositoryAbstract) {}
 
-	async execute(): Promise<PermissionsEntity[]> {
-		return await this.permissionsRepository.find();
+	async execute(): Promise<PermissionRepositoryAbstractResponse[]> {
+		return await this.permissionsRepository.findAll();
 	}
 }

@@ -5,4 +5,5 @@ export abstract class PermissionsSlugsRepositoryAbstract {
 	abstract findBySlugs(slugs: string[]): Promise<PermissionsSlugsEntity[]>;
 	abstract slugExists(slug: string): Promise<boolean>;
 	abstract createForPermission(permissionId: string, slugs: string[]): Promise<void>;
+	abstract save(permissionsSlugs: PermissionsSlugsEntity[]): Promise<void>;
 }

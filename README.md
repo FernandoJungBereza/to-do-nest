@@ -1,8 +1,8 @@
 # To Do Nest
 
-API REST em [NestJS](https://nestjs.com/) para gerenciar **usuários** e **listas de tarefas** (to-do lists), com persistência em PostgreSQL, autenticação JWT e documentação Swagger em desenvolvimento.
+API REST em [NestJS](https://nestjs.com/) para gerenciar **usuários**, **listas de tarefas** (to-do lists) e **permissões por rota** (RBAC), com persistência em PostgreSQL, autenticação JWT e documentação Swagger em desenvolvimento.
 
-O projeto segue o padrão arquitetural **Pormade**: controllers finos, use cases com regra de negócio, repositories para acesso a dados e DTOs nas bordas da API.
+A organização do código separa controllers finos, use cases com regra de negócio, repositories para acesso a dados e DTOs nas bordas da API.
 
 ## Stack
 
@@ -18,10 +18,11 @@ O projeto segue o padrão arquitetural **Pormade**: controllers finos, use cases
 
 ## Funcionalidades
 
-- **Usuários**: cadastro, listagem, consulta por ID, atualização e exclusão.
-- **To-do lists**: CRUD vinculado a um usuário, com título, descrição, status `completed` e paginação com busca.
+- **Usuários**: cadastro público, consulta por ID, listagem paginada com filtros por nome e e-mail, atualização, exclusão permanente, soft delete e restauração de registros excluídos.
+- **To-do lists**: CRUD vinculado a um usuário, com título, descrição, status `completed` e listagem paginada com busca.
+- **Permissões (RBAC)**: perfis com slugs de rota (`permissions` + `permissions_slugs`), assign por usuário, manifest em memória para o guard, descoberta automática de rotas e endpoint para slugs disponíveis.
 - **Autenticação**: login com e-mail e senha; access token (1h) e refresh token (7d) em cookies HTTP-only; renovação via `POST /auth/refresh-token`.
-- **Proteção global**: `JwtAuthGuard` aplicado em toda a aplicação; rotas marcadas com `@Public()` ficam acessíveis sem token.
+- **Proteção global**: `JwtAuthGuard` e `PermissionsGuard` aplicados em toda a aplicação; rotas com `@Public()` ficam sem JWT; rotas registradas no manifest exigem slug correspondente (ou slug `admin`).
 - **Swagger**: disponível apenas quando `NODE_ENV=development`.
 
 ## Requisitos
@@ -103,29 +104,31 @@ Rotas **públicas** (sem JWT):
 |--------|------|-----------|
 | `POST` | `/auth/login` | Login |
 | `POST` | `/auth/refresh-token` | Refresh token |
-| `POST` | `/users` | Cadastro (público) |
+| `POST` | `/users` | Cadastro |
 
-Demais rotas exigem JWT. Rotas com slug cadastrado em `permissions_slugs` exigem permissão (ou slug `admin`).
+Demais rotas exigem JWT. Rotas com slug cadastrado no manifest exigem que o usuário possua esse slug (via permissão assignada) ou o slug especial `admin`.
 
 ## Permissões (RBAC por rota)
 
-Fluxo sugerido:
+O módulo `permissions` descobre controllers em `src/modules` (exceto `auth`), monta um manifest rota → slug e valida acesso no `PermissionsGuard`.
 
-1. Inserir permissão **Administrator** com slug `admin` e assign ao seu usuário (pgAdmin ou API).
-2. `GET /permissions/available-slugs` — slugs únicos agrupados por módulo (`modules[].name`, `modules[].routes`).
-3. `POST /permissions` — `{ name, description, permissionSlug: ["user.create", ...] }` → grava slugs e remonta o manifest.
-4. `POST /users/:userId/permissions` — `{ permissionId }` assign.
-5. `POST /permissions/reload` — remonta manifest (somente admin).
+Fluxo sugerido para o primeiro acesso administrativo:
+
+1. Criar permissão **Administrator** com slug `admin` e assign ao seu usuário (pgAdmin ou API).
+2. `GET /permissions/available-slugs` — slugs sugeridos agrupados por módulo (`modules[].name`, `modules[].routes`).
+3. `POST /permissions` — `{ "name", "description", "permissionSlug": ["user.create", ...] }` — persiste a permissão, os slugs e remonta o manifest.
+4. `POST /users/:userId/permissions` — `{ "permissionId" }` — vincula permissão ao usuário.
+5. `POST /permissions/reload` — remonta o manifest manualmente (requer slug `admin`).
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/permissions/available-slugs` | Slugs sugeridos para criar permissões |
+| `GET` | `/permissions/available-slugs` | Slugs sugeridos para montar permissões |
 | `POST` | `/permissions` | Criar permissão com slugs |
 | `GET` | `/permissions` | Listar permissões |
-| `GET` | `/permissions/:id` | Buscar permissão |
+| `GET` | `/permissions/:id` | Buscar permissão por ID |
 | `DELETE` | `/permissions/:id` | Remover permissão |
-| `POST` | `/permissions/reload` | Rebuild manifest (admin) |
-| `POST` | `/users/:userId/permissions` | Assign permissão ao usuário |
+| `POST` | `/permissions/reload` | Rebuild do manifest (admin) |
+| `POST` | `/users/:userId/permissions` | Assign de permissão ao usuário |
 | `GET` | `/users/:userId/permissions` | Permissões do usuário (com slugs) |
 
 ## Endpoints
@@ -142,10 +145,14 @@ Fluxo sugerido:
 | Método | Rota | Descrição |
 |--------|------|-----------|
 | `POST` | `/users` | Criar usuário (público) |
-| `GET` | `/users` | Listar usuários |
+| `GET` | `/users/paginated` | Listagem paginada (`page`, `quantity`, `name`, `email`) |
 | `GET` | `/users/:id` | Buscar por ID |
 | `PATCH` | `/users/:id` | Atualizar |
-| `DELETE` | `/users/:id` | Excluir |
+| `DELETE` | `/users/:id` | Excluir permanentemente |
+| `DELETE` | `/users/:id/soft-delete` | Soft delete (`deleted_at`) |
+| `POST` | `/users/:id/restore/deleted` | Restaurar usuário soft-deleted |
+| `POST` | `/users/:userId/permissions` | Assign de permissão |
+| `GET` | `/users/:userId/permissions` | Permissões do usuário |
 
 ### To-do lists
 
@@ -174,9 +181,9 @@ Scripts TypeORM (CLI usa `src/database/typeorm.datasource.ts`):
 
 ```bash
 npm run migration:generate   # gera migration a partir das entities
-npm run migration:create       # cria migration vazia
-npm run migration:run          # aplica migrations pendentes
-npm run migration:revert       # reverte a última migration
+npm run migration:create     # cria migration vazia
+npm run migration:run        # aplica migrations pendentes
+npm run migration:revert     # reverte a última migration
 ```
 
 Em **produção**, alterações de schema devem passar por migration (`synchronize: false`). O datasource de migrations também habilita `synchronize` apenas em `development`.
@@ -190,6 +197,7 @@ Em **produção**, alterações de schema devem passar por migration (`synchroni
 | `npm run build` | Compila (`nest build` + `tsc-alias`) |
 | `npm run lint` | ESLint com fix |
 | `npm run test` | Testes unitários (Jest) |
+| `npm run test:cov` | Cobertura de testes |
 | `npm run test:e2e` | Testes e2e |
 
 ## Estrutura do projeto
@@ -197,7 +205,7 @@ Em **produção**, alterações de schema devem passar por migration (`synchroni
 ```text
 src/
 ├── main.ts                 # bootstrap, ValidationPipe, cookies, Swagger
-├── app.module.ts           # módulos globais e JwtAuthGuard
+├── app.module.ts           # módulos globais, JwtAuthGuard e PermissionsGuard
 ├── config/
 │   ├── env/                # validação e EnvService
 │   ├── swagger.config.ts
@@ -207,7 +215,9 @@ src/
 │   └── typeorm.datasource.ts
 ├── modules/
 │   ├── auth/               # login, refresh, JWT strategy, guards
-│   ├── user/               # CRUD de usuários
+│   ├── user/               # CRUD, paginação, soft delete e assign de permissões
+│   ├── permissions/        # RBAC, manifest, descoberta de rotas e slugs
+│   ├── permission-user/    # vínculo usuário ↔ permissão (entity)
 │   └── to-do-list/         # CRUD e paginação de listas
 └── shared/                 # entities base, DTOs e helpers comuns
 ```
@@ -219,7 +229,9 @@ Cada módulo de domínio costuma ter:
 - `use-cases/` — um caso de uso por pasta (`*.use-case.ts` + `*.controller.ts`)
 - `dtos/` e `interfaces/` — contratos de entrada/saída
 
-## Arquitetura (Pormade)
+O módulo `permissions` inclui ainda `authorization/` (manifest, descoberta de rotas e resolução de slugs por usuário).
+
+## Arquitetura
 
 - **Controllers** recebem HTTP, delegam ao use case e retornam DTOs.
 - **Use cases** concentram regra de negócio e orquestram repositories.
@@ -229,9 +241,16 @@ Cada módulo de domínio costuma ter:
 
 ## Modelo de dados
 
-- **`users`**: `id` (UUID), `name`, `email`, `password` (hash bcrypt).
-- **`to_do_lists`**: `id`, `title`, `description`, `completed`, `userId`, `createdAt`, `updatedAt`.
-- Relação: um usuário possui várias listas (`OneToMany` / `ManyToOne`).
+- **`users`**: `id` (UUID), `name`, `email`, `password` (hash bcrypt), `created_at`, `updated_at`, `deleted_at` (soft delete).
+- **`to_do_lists`**: `id`, `title`, `description`, `completed`, `user_id`, timestamps.
+- **`permissions`**: `id`, `name`, `description`, timestamps.
+- **`permissions_slugs`**: `id`, `permission_id`, `slug` (único) — slugs de rota vinculados a uma permissão.
+- **`permission_user`**: `id`, `permission_id`, `user_id`, timestamps — N:N entre usuários e permissões.
+
+Relações principais:
+
+- Um usuário possui várias listas (`OneToMany` / `ManyToOne`).
+- Um usuário pode ter várias permissões; cada permissão agrupa vários slugs de rota.
 
 ## Convenções
 

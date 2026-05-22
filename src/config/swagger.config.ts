@@ -8,7 +8,7 @@ export function setupSwagger(app: INestApplication, env: EnvService): void {
 
 	const config = new DocumentBuilder()
 		.setTitle('To Do Nest API')
-		.setDescription('Documentação da API seguindo o padrão arquitetural Pormade.')
+		.setDescription('Documentação da API REST do To Do Nest.')
 		.setVersion('1.0.0')
 		.build();
 

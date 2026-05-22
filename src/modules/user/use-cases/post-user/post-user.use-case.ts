@@ -6,25 +6,25 @@ import { ThrowIfExistUserUseCase } from '../throw-if-exist-user.use-case';
 
 @Injectable()
 export class PostUserUseCase {
-  constructor(
-    private readonly userRepository: UserRepositoryAbstract,
-    private readonly throwIfExistUserUseCase: ThrowIfExistUserUseCase,
-  ) {}
+	constructor(
+		private readonly userRepository: UserRepositoryAbstract,
+		private readonly throwIfExistUserUseCase: ThrowIfExistUserUseCase,
+	) {}
 
-  async execute(postUserDto: PostUserDto): Promise<void> {
-    const passwordHash = await hash(postUserDto.password, 10);
+	async execute(postUserDto: PostUserDto): Promise<void> {
+		const passwordHash = await hash(postUserDto.password, 10);
 
-    await this.throwIfExistUserUseCase.execute({
-      where: {
-        email: postUserDto.email,
-      },
-    });
+		await this.throwIfExistUserUseCase.execute({
+			where: {
+				email: postUserDto.email,
+			},
+		});
 
-    const user = await this.userRepository.create({
-      ...postUserDto,
-      password: passwordHash,
-    });
+		const user = await this.userRepository.create({
+			...postUserDto,
+			password: passwordHash,
+		});
 
-    await this.userRepository.save(user);
-  }
+		await this.userRepository.save(user);
+	}
 }

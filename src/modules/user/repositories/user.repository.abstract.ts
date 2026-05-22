@@ -1,7 +1,6 @@
 import { PaginationNameAndEmailDto } from '@/shared/dtos/joins/pagination-name-and-email.dto';
 import { FindOneOptions } from 'typeorm';
 import { DeleteResult, UpdateResult } from 'typeorm/browser';
-
 import { OutputPaginatedUserDto } from '../dtos/output-paginated-user.dto';
 import { OutputUserPermissionsDto } from '../dtos/output-user-permissions.dto';
 import { PostUserDto } from '../dtos/post-user.dto';

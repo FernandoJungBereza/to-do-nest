@@ -31,6 +31,10 @@ export class PermissionsSlugsRepository implements PermissionsSlugsRepositoryAbs
 		return await this.permissionsSlugsRepository.exists({ where: { slug } });
 	}
 
+	async save(permissionsSlugs: PermissionsSlugsEntity[]): Promise<void> {
+		await this.permissionsSlugsRepository.save(permissionsSlugs);
+	}
+
 	async createForPermission(permissionId: string, slugs: string[]): Promise<void> {
 		await this.permissionsSlugsRepository.save(
 			slugs.map((slug) =>

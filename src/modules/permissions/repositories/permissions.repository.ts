@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, FindOneOptions, Repository } from 'typeorm';
 import { OutputGetPermissionDto } from '../dtos/output-get-permission.dto';
+import { PostPermissionDto } from '../dtos/post-permission.dto';
 import { PermissionsEntity } from '../entities/permissions.entity';
 import { PermissionRepositoryAbstractResponse } from '../interfaces/permission-repository-abstract-response';
 import { PermissionsRepositoryAbstract } from './permissions.repository.abstratct';
@@ -26,8 +27,16 @@ export class PermissionsRepository implements PermissionsRepositoryAbstract {
 		}));
 	}
 
-	async create(permissions: PermissionsEntity): Promise<PermissionsEntity> {
-		return await this.permissionsRepository.save(permissions);
+	async create(postPermissionDto: PostPermissionDto): Promise<PermissionsEntity> {
+		return this.permissionsRepository.create({
+			name: postPermissionDto.name,
+			description: postPermissionDto.description,
+			permissionSlugs: postPermissionDto.permissionSlug.map((slug) => ({ slug })),
+		});
+	}
+
+	async save(permission: PermissionsEntity): Promise<PermissionsEntity> {
+		return await this.permissionsRepository.save(permission);
 	}
 
 	async delete(id: string): Promise<DeleteResult> {
