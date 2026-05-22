@@ -14,7 +14,6 @@ export enum Permission {
 	UserFindPermission = 'user.find.permission',
 	UserAssignPermission = 'user.assign.permission',
 
-	PermissionsAvailable = 'permissions.available',
 	PermissionsCreate = 'permissions.create',
 	PermissionsList = 'permissions.list',
 	PermissionsFind = 'permissions.find',
@@ -26,7 +25,3 @@ export enum Permission {
 	ToDoListUpdate = 'to-do-list.update',
 	ToDoListDelete = 'to-do-list.delete',
 }
-
-export const ALL_PERMISSIONS: Permission[] = Object.values(Permission).filter(
-	(value): value is Permission => typeof value === 'string',
-);

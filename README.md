@@ -116,13 +116,11 @@ Fluxo:
 
 1. Garantir o perfil `admin` em `permissions` (`name` = `admin`, id fixo `00000000-0000-4000-8000-000000000001` se você seguir o seed manual).
 2. Assign do admin ao seu usuário (`POST /users/:id/permissions` com `{ "permissionId": "00000000-0000-4000-8000-000000000001" }`).
-3. `GET /permissions/available` — catálogo do enum (`name`, `suggestedDescription`, `registered`).
-4. `POST /permissions` — `{ "name": "user.find", "description": "..." }` — `name` deve ser um valor do enum; uma linha = um perfil.
-5. `POST /users/:id/permissions` — `{ "permissionId" }` — vincula o perfil ao usuário.
+3. `POST /permissions` — `{ "name": "user.find", "description": "..." }` — `name` deve ser um valor do enum; uma linha = um perfil.
+4. `POST /users/:id/permissions` — `{ "permissionId" }` — vincula o perfil ao usuário.
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| `GET` | `/permissions/available` | Catálogo do enum (o que pode ser cadastrado) |
 | `POST` | `/permissions` | Criar perfil (`name` + `description`) |
 | `GET` | `/permissions` | Listar permissões |
 | `GET` | `/permissions/:id` | Buscar permissão por ID |

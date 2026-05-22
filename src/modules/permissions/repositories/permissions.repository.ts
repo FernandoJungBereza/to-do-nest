@@ -19,11 +19,6 @@ export class PermissionsRepository implements PermissionsRepositoryAbstract {
 		return permissions.map((permission) => this.toOutput(permission));
 	}
 
-	async findRegisteredNames(): Promise<string[]> {
-		const rows = await this.permissionsRepository.find({ select: ['name'] });
-		return rows.map((row) => row.name);
-	}
-
 	async create(postPermissionDto: PostPermissionDto): Promise<PermissionsEntity> {
 		return this.permissionsRepository.create({
 			name: postPermissionDto.name,
