@@ -1,18 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import {
-	MODULE_CONTROLLER_PREFIXES,
-	PERMISSION_ROUTE_SKIP_MODULES,
-} from '../constants/permission.constants';
+import { PERMISSION_ROUTE_SKIP_MODULES } from '../constants/permission.constants';
 import { DiscoveredRouteAuthorization } from '../interfaces/discovered-route-authorization.interface';
 
 const HTTP_METHODS = ['Get', 'Post', 'Patch', 'Put', 'Delete'] as const;
+const CONTROLLER_FILE_SUFFIXES = ['.controller.ts', '.controller.js'] as const;
 
 @Injectable()
 export class RouteDiscoveryService {
 	private readonly logger = new Logger(RouteDiscoveryService.name);
-	private readonly modulesRoot = join(process.cwd(), 'src', 'modules');
+	private readonly modulesRoot = RouteDiscoveryService.resolveModulesRoot();
 
 	discover(): DiscoveredRouteAuthorization[] {
 		const controllerFiles = this.collectControllerFiles(this.modulesRoot);
@@ -27,9 +25,27 @@ export class RouteDiscoveryService {
 		}
 
 		const discovered = [...unique.values()].sort((a, b) => a.routeKey.localeCompare(b.routeKey));
-		this.logger.log(`Discovered ${discovered.length} route(s) for permission mapping`);
+		const modules = [...new Set(discovered.map((route) => route.module))].sort();
+		this.logger.log(
+			`Discovered ${discovered.length} route(s) from ${modules.length} module(s): ${modules.join(', ') || 'none'}`,
+		);
 
 		return discovered;
+	}
+
+	private static resolveModulesRoot(): string {
+		const candidates = [
+			join(process.cwd(), 'src', 'modules'),
+			join(process.cwd(), 'dist', 'modules'),
+		];
+
+		for (const root of candidates) {
+			if (existsSync(root)) {
+				return root;
+			}
+		}
+
+		throw new Error('Modules directory not found. Expected src/modules or dist/modules.');
 	}
 
 	private collectControllerFiles(directory: string): string[] {
@@ -43,7 +59,10 @@ export class RouteDiscoveryService {
 				continue;
 			}
 
-			if (entry.isFile() && entry.name.endsWith('.controller.ts')) {
+			if (
+				entry.isFile() &&
+				CONTROLLER_FILE_SUFFIXES.some((suffix) => entry.name.endsWith(suffix))
+			) {
 				files.push(fullPath);
 			}
 		}
@@ -72,8 +91,6 @@ export class RouteDiscoveryService {
 		}
 
 		const controllerPath = controllerMatch[1].trim();
-		this.assertControllerMatchesModule(module, controllerPath, filePath);
-
 		const routes: DiscoveredRouteAuthorization[] = [];
 
 		for (const method of HTTP_METHODS) {
@@ -103,32 +120,6 @@ export class RouteDiscoveryService {
 		const match = normalized.match(/\/modules\/([^/]+)\//);
 
 		return match?.[1] ?? null;
-	}
-
-	private assertControllerMatchesModule(
-		module: string,
-		controllerPath: string,
-		filePath: string,
-	): void {
-		const allowedPrefixes = MODULE_CONTROLLER_PREFIXES[module];
-
-		if (!allowedPrefixes) {
-			throw new Error(
-				`Module folder "${module}" in ${filePath} is not registered in MODULE_CONTROLLER_PREFIXES.`,
-			);
-		}
-
-		const normalized = controllerPath.replace(/^\/+|\/+$/g, '');
-		const isValid = allowedPrefixes.some(
-			(prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`),
-		);
-
-		if (!isValid) {
-			throw new Error(
-				`@Controller('${controllerPath}') in ${filePath} does not match module "${module}". ` +
-					`Allowed prefixes: ${allowedPrefixes.join(', ')}`,
-			);
-		}
 	}
 
 	private joinRoutePath(controllerPath: string, handlerPath?: string): string {

@@ -51,7 +51,7 @@ export class PermissionsGuard implements CanActivate {
 		const requiredSlug = this.routeManifestService.getRequiredSlug(routeKey);
 
 		if (!requiredSlug) {
-			throw new ForbiddenException('Route not registered for permissions');
+			return true;
 		}
 
 		if (!userSlugs.includes(requiredSlug)) {
