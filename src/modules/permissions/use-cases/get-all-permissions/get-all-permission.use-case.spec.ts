@@ -1,4 +1,4 @@
-import { PermissionsRepositoryAbstract } from '../../repositories/permissions.repository.abstratct';
+import { PermissionsRepositoryAbstract } from '../../repositories/permissions.repository.abstract';
 import { GetAllPermissionUseCase } from './get-all-permission.use-case';
 
 describe('GetAllPermissionUseCase', () => {

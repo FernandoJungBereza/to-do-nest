@@ -1,3 +1,5 @@
+import { Permission } from '@/modules/permissions/constants/permission.enum';
+import { RequirePermission } from '@/modules/permissions/decorators/require-permission.decorator';
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PostToDoListDto } from '../../dtos/post-to-do-list.dto';
@@ -8,6 +10,7 @@ import { PostToDoListUseCase } from './post-to-do-list.use-case';
 export class PostToDoListController {
 	constructor(private readonly postToDoListUseCase: PostToDoListUseCase) {}
 
+	@RequirePermission(Permission.ToDoListCreate)
 	@Post()
 	@ApiOperation({ summary: 'Create a new to-do list' })
 	@ApiResponse({ status: 201, description: 'To-do list created' })

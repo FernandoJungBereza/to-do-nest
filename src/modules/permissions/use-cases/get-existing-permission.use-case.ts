@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { FindOneOptions } from 'typeorm';
 import { OutputGetPermissionDto } from '../dtos/output-get-permission.dto';
 import { PermissionsEntity } from '../entities/permissions.entity';
-import { PermissionsRepositoryAbstract } from '../repositories/permissions.repository.abstratct';
+import { PermissionsRepositoryAbstract } from '../repositories/permissions.repository.abstract';
 
 @Injectable()
 export class GetExistingPermissionUseCase {

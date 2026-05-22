@@ -4,11 +4,10 @@ import { PermissionRepositoryAbstractResponse } from '../interfaces/permission-r
 export class OutputGetPermissionDto implements PermissionRepositoryAbstractResponse {
 	@ApiProperty({ description: 'The id of the permission' })
 	id: string;
-	@ApiProperty({ description: 'The name of the permission' })
+
+	@ApiProperty({ description: 'Permission name (matches Permission enum)', example: 'user.find' })
 	name: string;
+
 	@ApiProperty({ description: 'The description of the permission' })
 	description: string;
-
-	@ApiProperty({ description: 'Slugs linked to this permission', type: [String] })
-	slugs: string[];
 }

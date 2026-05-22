@@ -1,3 +1,5 @@
+import { Permission } from '@/modules/permissions/constants/permission.enum';
+import { RequirePermission } from '@/modules/permissions/decorators/require-permission.decorator';
 import { Controller, Delete, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SoftDeleteUserUseCase } from './soft-delete-user.use-case';
@@ -7,6 +9,7 @@ import { SoftDeleteUserUseCase } from './soft-delete-user.use-case';
 export class SoftDeleteUserController {
 	constructor(private readonly softDeleteUserUseCase: SoftDeleteUserUseCase) {}
 
+	@RequirePermission(Permission.UserSoftDelete)
 	@Delete(':id/soft')
 	@ApiOperation({ summary: 'Soft delete a user by ID' })
 	@ApiResponse({ status: 200, description: 'User soft deleted' })

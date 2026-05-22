@@ -1,3 +1,5 @@
+import { Permission } from '@/modules/permissions/constants/permission.enum';
+import { RequirePermission } from '@/modules/permissions/decorators/require-permission.decorator';
 import { Controller, Delete, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { DeleteToDoListUseCase } from './delete-to-do-list.use-case';
@@ -7,6 +9,7 @@ import { DeleteToDoListUseCase } from './delete-to-do-list.use-case';
 export class DeleteToDoListController {
 	constructor(private readonly deleteToDoListUseCase: DeleteToDoListUseCase) {}
 
+	@RequirePermission(Permission.ToDoListDelete)
 	@Delete(':id')
 	@ApiOperation({ summary: 'Delete a to-do list by ID' })
 	@ApiResponse({ status: 200, description: 'To-do list deleted' })

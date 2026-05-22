@@ -1,3 +1,5 @@
+import { Permission } from '@/modules/permissions/constants/permission.enum';
+import { RequirePermission } from '@/modules/permissions/decorators/require-permission.decorator';
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OutputGetPermissionDto } from '../../dtos/output-get-permission.dto';
@@ -8,6 +10,7 @@ import { GetAllPermissionUseCase } from './get-all-permission.use-case';
 export class GetAllPermissionController {
 	constructor(private readonly getAllPermissionUseCase: GetAllPermissionUseCase) {}
 
+	@RequirePermission(Permission.PermissionsList)
 	@Get()
 	@ApiOperation({ summary: 'Get all permissions' })
 	@ApiResponse({ status: 200, description: 'Permissions found', type: [OutputGetPermissionDto] })

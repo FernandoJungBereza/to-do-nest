@@ -6,6 +6,5 @@ export function mapPermissionToOutput(permission: PermissionsEntity): OutputGetP
 		id: permission.id,
 		name: permission.name,
 		description: permission.description,
-		slugs: permission.permissionSlugs?.map((permissionSlug) => permissionSlug.slug) ?? [],
 	};
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PermissionsRepositoryAbstract } from '../../repositories/permissions.repository.abstratct';
+import { PermissionsRepositoryAbstract } from '../../repositories/permissions.repository.abstract';
 import { PermissionRepositoryAbstractResponse } from '../../interfaces/permission-repository-abstract-response';
 
 @Injectable()

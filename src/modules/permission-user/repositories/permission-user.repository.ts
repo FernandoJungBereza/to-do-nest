@@ -35,7 +35,6 @@ export class PermissionUserRepository implements PermissionUserRepositoryAbstrac
 			.createQueryBuilder('user')
 			.leftJoinAndSelect('user.permissionUsers', 'permissionUser')
 			.leftJoinAndSelect('permissionUser.permission', 'permission')
-			.leftJoinAndSelect('permission.permissionSlugs', 'permissionSlug')
 			.where('user.id = :userId', { userId })
 			.getOneOrFail();
 
@@ -46,9 +45,6 @@ export class PermissionUserRepository implements PermissionUserRepositoryAbstrac
 				id: permissionUser.permission.id,
 				name: permissionUser.permission.name,
 				description: permissionUser.permission.description,
-				slugs: permissionUser.permission.permissionSlugs.map(
-					(permissionSlug) => permissionSlug.slug,
-				),
 			})),
 		};
 	}

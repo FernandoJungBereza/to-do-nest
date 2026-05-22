@@ -1,28 +1,20 @@
+import { Permission } from '@/modules/permissions/constants/permission.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import { PostPermissionDtoInterface } from '../interfaces/post-permission-dto.interface';
 
 export class PostPermissionDto implements PostPermissionDtoInterface {
 	@ApiProperty({
-		description: 'The name of the permission',
-		example: 'Read',
-		required: true,
-		type: String,
-		minLength: 3,
-		maxLength: 255,
+		description: 'Permission name (must match Permission enum — same value used in @RequirePermission)',
+		example: Permission.UserFind,
+		enum: Permission,
 	})
-	@IsString()
-	@IsNotEmpty()
-	@MinLength(3)
-	@MaxLength(255)
-	@IsString()
-	name: string;
+	@IsEnum(Permission)
+	name: Permission;
 
 	@ApiProperty({
-		description: 'The description of the permission',
-		example: 'Read the user data',
-		required: true,
-		type: String,
+		description: 'Human-readable description of this permission profile',
+		example: 'Allows finding a user by id',
 		minLength: 3,
 		maxLength: 255,
 	})
@@ -30,17 +22,5 @@ export class PostPermissionDto implements PostPermissionDtoInterface {
 	@IsNotEmpty()
 	@MinLength(3)
 	@MaxLength(255)
-	@IsString()
 	description: string;
-
-	@ApiProperty({
-		description: 'The permission slug of the permission',
-		example: ['read', 'write', 'delete'],
-		required: true,
-		type: [String],
-	})
-	@IsArray()
-	@IsNotEmpty()
-	@IsString({ each: true })
-	permissionSlug: string[];
 }

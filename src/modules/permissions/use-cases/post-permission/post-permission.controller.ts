@@ -1,3 +1,5 @@
+import { Permission } from '@/modules/permissions/constants/permission.enum';
+import { RequirePermission } from '@/modules/permissions/decorators/require-permission.decorator';
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OutputGetPermissionDto } from '../../dtos/output-get-permission.dto';
@@ -9,6 +11,7 @@ import { PostPermissionUseCase } from './post-permission.use-case';
 export class PostPermissionController {
 	constructor(private readonly postPermissionUseCase: PostPermissionUseCase) {}
 
+	@RequirePermission(Permission.PermissionsCreate)
 	@Post()
 	@ApiOperation({ summary: 'Create a new permission' })
 	@ApiResponse({ status: 201, description: 'Permission created', type: OutputGetPermissionDto })

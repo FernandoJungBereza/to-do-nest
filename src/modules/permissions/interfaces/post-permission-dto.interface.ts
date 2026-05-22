@@ -1,5 +1,6 @@
+import { Permission } from '../constants/permission.enum';
+
 export interface PostPermissionDtoInterface {
-	name: string;
+	name: Permission;
 	description: string;
-	permissionSlug: string[];
 }

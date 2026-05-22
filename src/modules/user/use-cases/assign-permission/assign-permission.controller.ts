@@ -1,6 +1,7 @@
+import { Permission } from '@/modules/permissions/constants/permission.enum';
+import { RequirePermission } from '@/modules/permissions/decorators/require-permission.decorator';
 import { AssignPermissionDto } from '@/modules/permissions/dtos/assign-permission.dto';
-import type { AuthenticatedRequest } from '@/modules/auth/interfaces/authenticated-request.interface';
-import { Body, Controller, Param, ParseUUIDPipe, Post, Req } from '@nestjs/common';
+import { Body, Controller, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AssignPermissionUseCase } from './assign-permission.use-case';
 
@@ -9,21 +10,14 @@ import { AssignPermissionUseCase } from './assign-permission.use-case';
 export class AssignPermissionController {
 	constructor(private readonly assignPermissionUseCase: AssignPermissionUseCase) {}
 
+	@RequirePermission(Permission.UserAssignPermission)
 	@Post(':id/permissions')
-	@ApiOperation({ summary: 'Assign a permission to a user (admin only)' })
+	@ApiOperation({ summary: 'Assign a permission to a user' })
 	@ApiResponse({ status: 201, description: 'Permission assigned' })
 	@ApiResponse({ status: 403, description: 'Forbidden' })
 	@ApiResponse({ status: 404, description: 'User or permission not found' })
 	@ApiResponse({ status: 409, description: 'Permission already assigned' })
-	async assignPermission(
-		@Req() request: AuthenticatedRequest,
-		@Param('id', ParseUUIDPipe) id: string,
-		@Body() assignPermissionDto: AssignPermissionDto,
-	) {
-		await this.assignPermissionUseCase.execute(
-			request.user.userId,
-			id,
-			assignPermissionDto.permissionId,
-		);
+	async assignPermission(@Param('id', ParseUUIDPipe) id: string, @Body() assignPermissionDto: AssignPermissionDto) {
+		await this.assignPermissionUseCase.execute(id, assignPermissionDto.permissionId);
 	}
 }

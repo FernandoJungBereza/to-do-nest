@@ -1,3 +1,5 @@
+import { Permission } from '@/modules/permissions/constants/permission.enum';
+import { RequirePermission } from '@/modules/permissions/decorators/require-permission.decorator';
 import { PaginationTitleAndNameDto } from '@/shared/dtos/joins/pagination-title-and-name.dto';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -9,6 +11,7 @@ import { GetPaginatedToDoListUseCase } from './get-paginated-to-do-list.use-case
 export class GetPaginatedToDoListController {
 	constructor(private readonly getPaginatedToDoListUseCase: GetPaginatedToDoListUseCase) {}
 
+	@RequirePermission(Permission.ToDoListPaginated)
 	@Get()
 	@ApiOperation({ summary: 'Get paginated to-do lists for a user' })
 	@ApiResponse({ status: 200, description: 'To-do lists found', type: OutputPaginatedToDoListDto })

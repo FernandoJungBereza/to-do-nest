@@ -1,3 +1,5 @@
+import { Permission } from '@/modules/permissions/constants/permission.enum';
+import { RequirePermission } from '@/modules/permissions/decorators/require-permission.decorator';
 import { PaginationNameAndEmailDto } from '@/shared/dtos/joins/pagination-name-and-email.dto';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -9,6 +11,7 @@ import { OutputPaginatedUserDto } from '../../dtos/output-paginated-user.dto';
 export class GetPaginatedUserController {
 	constructor(private readonly getPaginatedUserUseCase: GetPaginatedUsersUseCase) {}
 
+	@RequirePermission(Permission.UsersPaginated)
 	@Get()
 	@ApiOperation({ summary: 'Get paginated users' })
 	@ApiResponse({ status: 200, description: 'Users found', type: OutputPaginatedUserDto })

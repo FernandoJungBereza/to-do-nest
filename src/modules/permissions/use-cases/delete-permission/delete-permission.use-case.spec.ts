@@ -1,22 +1,20 @@
 import { NotFoundException } from '@nestjs/common';
-import { RouteManifestService } from '../../authorization/route-manifest.service';
+import { Permission } from '../../constants/permission.enum';
 import { OutputGetPermissionDto } from '../../dtos/output-get-permission.dto';
 import { GetExistingPermissionUseCase } from '../get-existing-permission.use-case';
 import { DeletePermissionUseCase } from './delete-permission.use-case';
-import { PermissionsRepositoryAbstract } from '../../repositories/permissions.repository.abstratct';
+import { PermissionsRepositoryAbstract } from '../../repositories/permissions.repository.abstract';
 
 describe('DeletePermissionUseCase', () => {
 	const permissionId = 'permission-id';
 	const existingPermission: OutputGetPermissionDto = {
 		id: permissionId,
-		name: 'Admin',
+		name: Permission.Admin,
 		description: 'Admin permission',
-		slugs: ['users.create'],
 	};
 
 	let permissionsRepositoryMock: { delete: jest.Mock };
 	let getExistingPermissionUseCaseMock: { execute: jest.Mock };
-	let routeManifestServiceMock: { rebuild: jest.Mock };
 	let useCase: DeletePermissionUseCase;
 
 	beforeEach(() => {
@@ -26,18 +24,10 @@ describe('DeletePermissionUseCase', () => {
 		getExistingPermissionUseCaseMock = {
 			execute: jest.fn().mockResolvedValue(existingPermission),
 		};
-		routeManifestServiceMock = {
-			rebuild: jest.fn().mockResolvedValue({
-				mappedRoutes: 1,
-				discoveredRoutes: 2,
-				registeredSlugs: 3,
-			}),
-		};
 
 		useCase = new DeletePermissionUseCase(
 			permissionsRepositoryMock as unknown as PermissionsRepositoryAbstract,
 			getExistingPermissionUseCaseMock as unknown as GetExistingPermissionUseCase,
-			routeManifestServiceMock as unknown as RouteManifestService,
 		);
 	});
 
@@ -52,7 +42,6 @@ describe('DeletePermissionUseCase', () => {
 			where: { id: permissionId },
 		});
 		expect(permissionsRepositoryMock.delete).toHaveBeenCalledWith(permissionId);
-		expect(routeManifestServiceMock.rebuild).toHaveBeenCalledTimes(1);
 	});
 
 	it('should not delete when permission does not exist', async () => {
@@ -61,6 +50,5 @@ describe('DeletePermissionUseCase', () => {
 		await expect(useCase.execute(permissionId)).rejects.toThrow(NotFoundException);
 
 		expect(permissionsRepositoryMock.delete).not.toHaveBeenCalled();
-		expect(routeManifestServiceMock.rebuild).not.toHaveBeenCalled();
 	});
 });
