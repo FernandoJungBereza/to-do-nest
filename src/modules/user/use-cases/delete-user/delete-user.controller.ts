@@ -9,7 +9,7 @@ import { DeleteUserUseCase } from './delete-user.use-case';
 export class DeleteUserController {
 	constructor(private readonly deleteUserUseCase: DeleteUserUseCase) {}
 
-	@RequirePermission(Permission.UserDelete)
+	@RequirePermission(Permission.UsersDelete)
 	@Delete(':id')
 	@ApiOperation({ summary: 'Delete a user by ID' })
 	@ApiResponse({ status: 200, description: 'User deleted' })

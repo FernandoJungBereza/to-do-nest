@@ -11,7 +11,7 @@ import { OutputPaginatedUserDto } from '../../dtos/output-paginated-user.dto';
 export class GetPaginatedUserController {
 	constructor(private readonly getPaginatedUserUseCase: GetPaginatedUsersUseCase) {}
 
-	@RequirePermission(Permission.UsersPaginated)
+	@RequirePermission(Permission.UsersList)
 	@Get()
 	@ApiOperation({ summary: 'Get paginated users' })
 	@ApiResponse({ status: 200, description: 'Users found', type: OutputPaginatedUserDto })

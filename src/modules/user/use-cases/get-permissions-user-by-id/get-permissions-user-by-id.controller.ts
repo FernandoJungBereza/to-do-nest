@@ -10,7 +10,7 @@ import { GetPermissionsUserIdUseCase } from './get-permissions-user-by-id.use-ca
 export class GetPermissionsUserIdController {
 	constructor(private readonly getPermissionsUserIdUseCase: GetPermissionsUserIdUseCase) {}
 
-	@RequirePermission(Permission.UserFindPermission)
+	@RequirePermission(Permission.UsersPermissions)
 	@Get(':id/permissions')
 	@ApiOperation({ summary: 'Get permissions of a user by ID' })
 	@ApiResponse({ status: 200, description: 'Permissions found', type: OutputUserPermissionsDto })

@@ -9,7 +9,7 @@ import { RestoreUserUseCase } from './restore-user.use-case';
 export class RestoreUserController {
 	constructor(private readonly restoreUserUseCase: RestoreUserUseCase) {}
 
-	@RequirePermission(Permission.UserRestore)
+	@RequirePermission(Permission.UsersRestore)
 	@Post(':id/restore')
 	@ApiOperation({ summary: 'Restore a user by ID' })
 	@ApiResponse({ status: 200, description: 'User restored' })

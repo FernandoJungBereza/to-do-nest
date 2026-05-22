@@ -11,7 +11,7 @@ import { GetPaginatedToDoListUseCase } from './get-paginated-to-do-list.use-case
 export class GetPaginatedToDoListController {
 	constructor(private readonly getPaginatedToDoListUseCase: GetPaginatedToDoListUseCase) {}
 
-	@RequirePermission(Permission.ToDoListPaginated)
+	@RequirePermission(Permission.TodosList)
 	@Get()
 	@ApiOperation({ summary: 'Get paginated to-do lists for a user' })
 	@ApiResponse({ status: 200, description: 'To-do lists found', type: OutputPaginatedToDoListDto })

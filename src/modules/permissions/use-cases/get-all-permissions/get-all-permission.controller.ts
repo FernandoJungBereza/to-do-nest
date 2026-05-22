@@ -10,7 +10,7 @@ import { GetAllPermissionUseCase } from './get-all-permission.use-case';
 export class GetAllPermissionController {
 	constructor(private readonly getAllPermissionUseCase: GetAllPermissionUseCase) {}
 
-	@RequirePermission(Permission.PermissionsList)
+	@RequirePermission(Permission.PermissionsRead)
 	@Get()
 	@ApiOperation({ summary: 'Get all permissions' })
 	@ApiResponse({ status: 200, description: 'Permissions found', type: [OutputGetPermissionDto] })

@@ -10,7 +10,7 @@ import { UpdateToDoListUseCase } from './update-to-do-list.use-case';
 export class UpdateToDoListController {
 	constructor(private readonly updateToDoListUseCase: UpdateToDoListUseCase) {}
 
-	@RequirePermission(Permission.ToDoListUpdate)
+	@RequirePermission(Permission.TodosUpdate)
 	@Patch(':id')
 	@ApiOperation({ summary: 'Update a to-do list by ID' })
 	@ApiResponse({ status: 200, description: 'To-do list updated' })

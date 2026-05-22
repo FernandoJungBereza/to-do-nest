@@ -10,7 +10,7 @@ import { GetOneToDoListByIdUseCase } from './get-one-to-do-list-by-id.use-case';
 export class GetOneToDoListByIdController {
 	constructor(private readonly getOneToDoListByIdUseCase: GetOneToDoListByIdUseCase) {}
 
-	@RequirePermission(Permission.ToDoListFind)
+	@RequirePermission(Permission.TodosRead)
 	@Get(':id')
 	@ApiOperation({ summary: 'Get a to-do list by ID' })
 	@ApiResponse({ status: 200, description: 'To-do list found', type: OutputToDoListDto })

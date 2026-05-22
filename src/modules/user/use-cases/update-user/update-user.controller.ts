@@ -10,7 +10,7 @@ import { UpdateUserUseCase } from './update-user.use-case';
 export class UpdateUserController {
   constructor(private readonly updateUserUseCase: UpdateUserUseCase) {}
 
-	@RequirePermission(Permission.UserUpdate)
+	@RequirePermission(Permission.UsersUpdate)
 	@Patch(':id')
 	@ApiOperation({ summary: 'Update a user by ID' })
   @ApiResponse({ status: 200, description: 'User updated' })

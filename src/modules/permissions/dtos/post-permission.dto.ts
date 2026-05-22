@@ -6,7 +6,7 @@ import { PostPermissionDtoInterface } from '../interfaces/post-permission-dto.in
 export class PostPermissionDto implements PostPermissionDtoInterface {
 	@ApiProperty({
 		description: 'Permission name (must match Permission enum — same value used in @RequirePermission)',
-		example: Permission.UserFind,
+		example: Permission.UsersRead,
 		enum: Permission,
 	})
 	@IsEnum(Permission)

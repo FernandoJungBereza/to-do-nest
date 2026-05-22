@@ -10,7 +10,7 @@ import { FindOneByIdPermissionUseCase } from './find-one-by-id-permission.use-ca
 export class FindOneByIdPermissionController {
 	constructor(private readonly findOneByIdPermissionUseCase: FindOneByIdPermissionUseCase) {}
 
-	@RequirePermission(Permission.PermissionsFind)
+	@RequirePermission(Permission.PermissionsRead)
 	@Get(':id')
 	@ApiOperation({ summary: 'Get a permission by ID' })
 	@ApiResponse({ status: 200, description: 'Permission found', type: OutputGetPermissionDto })

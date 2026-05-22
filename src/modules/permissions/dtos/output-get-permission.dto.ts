@@ -5,7 +5,7 @@ export class OutputGetPermissionDto implements PermissionRepositoryAbstractRespo
 	@ApiProperty({ description: 'The id of the permission' })
 	id: string;
 
-	@ApiProperty({ description: 'Permission name (matches Permission enum)', example: 'user.find' })
+	@ApiProperty({ description: 'Permission name (matches Permission enum)', example: 'users.read' })
 	name: string;
 
 	@ApiProperty({ description: 'The description of the permission' })

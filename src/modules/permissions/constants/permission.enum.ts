@@ -1,27 +1,21 @@
-/**
- * Permission names stored in `permissions.name`.
- * Must match @RequirePermission() on controllers and POST /permissions body `name`.
- */
+/** Valores gravados em `permissions.name` e usados em `@RequirePermission()`. */
 export enum Permission {
 	Admin = 'admin',
 
-	UsersPaginated = 'users.paginated',
-	UserFind = 'user.find',
-	UserUpdate = 'user.update',
-	UserDelete = 'user.delete',
-	UserRestore = 'user.restore',
-	UserSoftDelete = 'user.soft-delete',
-	UserFindPermission = 'user.find.permission',
-	UserAssignPermission = 'user.assign.permission',
+	UsersList = 'users.list',
+	UsersRead = 'users.read',
+	UsersUpdate = 'users.update',
+	UsersDelete = 'users.delete',
+	UsersRestore = 'users.restore',
+	UsersPermissions = 'users.permissions',
 
 	PermissionsCreate = 'permissions.create',
-	PermissionsList = 'permissions.list',
-	PermissionsFind = 'permissions.find',
+	PermissionsRead = 'permissions.read',
 	PermissionsDelete = 'permissions.delete',
 
-	ToDoListPaginated = 'to-do-list.paginated',
-	ToDoListFind = 'to-do-list.find',
-	ToDoListCreate = 'to-do-list.create',
-	ToDoListUpdate = 'to-do-list.update',
-	ToDoListDelete = 'to-do-list.delete',
+	TodosList = 'todos.list',
+	TodosRead = 'todos.read',
+	TodosCreate = 'todos.create',
+	TodosUpdate = 'todos.update',
+	TodosDelete = 'todos.delete',
 }

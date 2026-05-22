@@ -9,7 +9,7 @@ import { SoftDeleteUserUseCase } from './soft-delete-user.use-case';
 export class SoftDeleteUserController {
 	constructor(private readonly softDeleteUserUseCase: SoftDeleteUserUseCase) {}
 
-	@RequirePermission(Permission.UserSoftDelete)
+	@RequirePermission(Permission.UsersDelete)
 	@Delete(':id/soft')
 	@ApiOperation({ summary: 'Soft delete a user by ID' })
 	@ApiResponse({ status: 200, description: 'User soft deleted' })

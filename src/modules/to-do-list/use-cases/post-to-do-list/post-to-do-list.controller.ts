@@ -10,7 +10,7 @@ import { PostToDoListUseCase } from './post-to-do-list.use-case';
 export class PostToDoListController {
 	constructor(private readonly postToDoListUseCase: PostToDoListUseCase) {}
 
-	@RequirePermission(Permission.ToDoListCreate)
+	@RequirePermission(Permission.TodosCreate)
 	@Post()
 	@ApiOperation({ summary: 'Create a new to-do list' })
 	@ApiResponse({ status: 201, description: 'To-do list created' })

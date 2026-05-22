@@ -10,7 +10,7 @@ import { AssignPermissionUseCase } from './assign-permission.use-case';
 export class AssignPermissionController {
 	constructor(private readonly assignPermissionUseCase: AssignPermissionUseCase) {}
 
-	@RequirePermission(Permission.UserAssignPermission)
+	@RequirePermission(Permission.UsersPermissions)
 	@Post(':id/permissions')
 	@ApiOperation({ summary: 'Assign a permission to a user' })
 	@ApiResponse({ status: 201, description: 'Permission assigned' })

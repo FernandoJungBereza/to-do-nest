@@ -10,7 +10,7 @@ import { OutputUserDto } from '../../dtos/output-user.dto';
 export class GetOneUserByIdController {
 	constructor(private readonly getOneUserByIdUseCase: GetOneUserByIdUseCase) {}
 
-	@RequirePermission(Permission.UserFind)
+	@RequirePermission(Permission.UsersRead)
 	@Get(':id')
 	@ApiOperation({ summary: 'Get a user by ID' })
 	@ApiResponse({ status: 200, description: 'User found' })
