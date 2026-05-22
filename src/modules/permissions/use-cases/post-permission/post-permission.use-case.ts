@@ -19,7 +19,7 @@ export class PostPermissionUseCase {
 
 	async execute(postPermissionDto: PostPermissionDto): Promise<void> {
 		const validSlugs = new Set(
-			this.routeDiscoveryService.discover().map((route) => route.suggestedSlug),
+			this.routeDiscoveryService.discover().map((route) => route.slug),
 		);
 
 		const invalidSlugs = postPermissionDto.permissionSlug.filter((slug) => !validSlugs.has(slug));

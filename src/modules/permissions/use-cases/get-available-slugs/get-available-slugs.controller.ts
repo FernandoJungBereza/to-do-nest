@@ -9,7 +9,7 @@ export class GetAvailableSlugsController {
 	constructor(private readonly getAvailableSlugsUseCase: GetAvailableSlugsUseCase) {}
 
 	@Get('available-slugs')
-	@ApiOperation({ summary: 'List discovered routes and permission slugs' })
+	@ApiOperation({ summary: 'List discovered routes with slug, title and description for UI' })
 	@ApiResponse({ status: 200, description: 'Routes found', type: OutputAvailableSlugsDto })
 	async getAvailableSlugs() {
 		return await this.getAvailableSlugsUseCase.execute();

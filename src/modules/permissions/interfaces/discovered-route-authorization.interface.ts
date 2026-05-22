@@ -3,5 +3,5 @@ export interface DiscoveredRouteAuthorization {
 	method: string;
 	module: string;
 	path: string;
-	suggestedSlug: string;
+	slug: string;
 }

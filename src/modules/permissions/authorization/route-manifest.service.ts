@@ -25,8 +25,8 @@ export class RouteManifestService implements OnModuleInit {
 		this.routePermissions.clear();
 
 		for (const route of discoveredRoutes) {
-			if (registeredSlugSet.has(route.suggestedSlug)) {
-				this.routePermissions.set(route.routeKey, route.suggestedSlug);
+			if (registeredSlugSet.has(route.slug)) {
+				this.routePermissions.set(route.routeKey, route.slug);
 			}
 		}
 

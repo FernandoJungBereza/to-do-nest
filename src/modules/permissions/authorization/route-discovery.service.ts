@@ -107,7 +107,7 @@ export class RouteDiscoveryService {
 					method: httpMethod,
 					path,
 					module,
-					suggestedSlug: `${module}.${action}`,
+					slug: `${module}.${action}`,
 				});
 			}
 		}
