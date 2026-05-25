@@ -1,4 +1,3 @@
-import { Public } from '@/modules/auth/decorator/public.decorator';
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PostUserDto } from '../../dtos/post-user.dto';
@@ -9,7 +8,6 @@ import { PostUserUseCase } from './post-user.use-case';
 export class PostUserController {
 	constructor(private readonly postUserUseCase: PostUserUseCase) {}
 
-	@Public()
 	@Post()
 	@ApiOperation({ summary: 'Create a new user' })
 	@ApiResponse({ status: 201, description: 'User created' })

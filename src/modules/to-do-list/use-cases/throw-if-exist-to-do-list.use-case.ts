@@ -15,7 +15,7 @@ export class ThrowIfExistToDoListUseCase {
 			const where = criteria.where || [];
 			const whereClause = formatWhereClause(where);
 
-			throw new BadRequestException(`to-do list já existe para o usuário com os critérios: ${whereClause}`);
+			throw new BadRequestException(`to-do list já existe para este usuário com o título informado (${whereClause})`);
 		}
 	}
 }

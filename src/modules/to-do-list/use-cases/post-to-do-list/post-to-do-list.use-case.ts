@@ -16,6 +16,7 @@ export class PostToDoListUseCase {
 		await this.throwIfExistToDoListUseCase.execute({
 			where: {
 				userId: postToDoListDto.userId,
+				title: postToDoListDto.title,
 			},
 		});
 

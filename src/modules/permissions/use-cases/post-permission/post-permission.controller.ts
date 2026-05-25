@@ -10,7 +10,7 @@ import { PostPermissionUseCase } from './post-permission.use-case';
 export class PostPermissionController {
 	constructor(private readonly postPermissionUseCase: PostPermissionUseCase) {}
 
-	@RequirePermission(Permission.PermissionsCreate)
+	@RequirePermission(Permission.PermissionsCreate && Permission.Admin)
 	@Post()
 	@ApiOperation({ summary: 'Create a new permission' })
 	@ApiResponse({ status: 201, description: 'Permission created' })

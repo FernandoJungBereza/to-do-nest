@@ -1,8 +1,8 @@
 import { IS_PUBLIC_KEY } from '@/modules/auth/decorator/public.decorator';
 import type { AuthenticatedRequest } from '@/modules/auth/interfaces/authenticated-request.interface';
+import { PermissionsAuthorizationService } from '@/modules/permissions/authorization/permissions-authorization.service';
 import { Permission } from '@/modules/permissions/constants/permission.enum';
 import { REQUIRE_PERMISSION_KEY } from '@/modules/permissions/decorators/require-permission.decorator';
-import { PermissionsAuthorizationService } from '@/modules/permissions/authorization/permissions-authorization.service';
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
