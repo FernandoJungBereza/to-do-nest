@@ -1,4 +1,5 @@
 import { PaginationTitleAndNameDto } from '@/shared/dtos/joins/pagination-title-and-name.dto';
+import { PaginationTitleDto } from '@/shared/dtos/joins/pagination-title.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, FindOneOptions, Repository, UpdateResult } from 'typeorm';
@@ -75,6 +76,58 @@ export class ToDoListRepository implements ToDoListRepositoryAbstract {
 			totalPages: Math.ceil(totalItems / paginationTitleAndNameDto.quantity),
 			totalItems,
 			itemsPerPage: paginationTitleAndNameDto.quantity,
+		});
+	}
+
+	async findPaginatedByUserId(
+		userId: string,
+		paginationTitleDto: PaginationTitleDto,
+	): Promise<OutputPaginatedToDoListDto> {
+		const toDoListQueryBuilder = this.toDoListRepository.createQueryBuilder('toDoList');
+		toDoListQueryBuilder.leftJoinAndSelect('toDoList.user', 'user');
+		toDoListQueryBuilder.select([
+			'toDoList.id',
+			'toDoList.title',
+			'toDoList.description',
+			'toDoList.completed',
+			'toDoList.userId',
+			'toDoList.createdAt',
+			'toDoList.updatedAt',
+			'user.name',
+			'user.email',
+		]);
+
+		toDoListQueryBuilder.where('toDoList.userId = :userId', { userId });
+		toDoListQueryBuilder.skip((paginationTitleDto.page - 1) * paginationTitleDto.quantity);
+		toDoListQueryBuilder.take(paginationTitleDto.quantity);
+
+		if (paginationTitleDto.title) {
+			toDoListQueryBuilder.andWhere('toDoList.title ILIKE :title', {
+				title: `%${paginationTitleDto.title}%`,
+			});
+		}
+
+		const [toDoLists, totalItems] = await toDoListQueryBuilder.getManyAndCount();
+		const data: OutputToDoListDto[] = toDoLists.map((toDoList) => ({
+			id: toDoList.id,
+			title: toDoList.title,
+			description: toDoList.description,
+			completed: toDoList.completed,
+			userId: toDoList.userId,
+			createdAt: toDoList.createdAt,
+			updatedAt: toDoList.updatedAt,
+			user: {
+				name: toDoList.user.name,
+				email: toDoList.user.email,
+			},
+		}));
+
+		return new OutputPaginatedToDoListDto({
+			data,
+			currentPage: paginationTitleDto.page,
+			totalPages: Math.ceil(totalItems / paginationTitleDto.quantity),
+			totalItems,
+			itemsPerPage: paginationTitleDto.quantity,
 		});
 	}
 

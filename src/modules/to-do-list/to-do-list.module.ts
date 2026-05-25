@@ -10,6 +10,8 @@ import { DeleteToDoListUseCase } from './use-cases/delete-to-do-list/delete-to-d
 import { GetExistingToDoListUseCase } from './use-cases/get-existing-to-do-list.use-case';
 import { GetOneToDoListByIdController } from './use-cases/get-one-to-do-list-by-id/get-one-to-do-list-by-id.controller';
 import { GetOneToDoListByIdUseCase } from './use-cases/get-one-to-do-list-by-id/get-one-to-do-list-by-id.use-case';
+import { GetPaginatedToDoListByCurrentUserController } from './use-cases/get-paginated-to-do-list-by-current-user/get-paginated-to-do-list-by-current-user.controller';
+import { GetPaginatedToDoListByCurrentUserUseCase } from './use-cases/get-paginated-to-do-list-by-current-user/get-paginated-to-do-list-by-current-user.use-case';
 import { GetPaginatedToDoListController } from './use-cases/get-paginated-to-do-list/get-paginated-to-do-list.controller';
 import { GetPaginatedToDoListUseCase } from './use-cases/get-paginated-to-do-list/get-paginated-to-do-list.use-case';
 import { PostToDoListController } from './use-cases/post-to-do-list/post-to-do-list.controller';
@@ -22,6 +24,7 @@ import { UpdateToDoListUseCase } from './use-cases/update-to-do-list/update-to-d
 	imports: [TypeOrmModule.forFeature([ToDoListEntity, UserEntity]), UserModule],
 	controllers: [
 		GetPaginatedToDoListController,
+		GetPaginatedToDoListByCurrentUserController,
 		GetOneToDoListByIdController,
 		PostToDoListController,
 		DeleteToDoListController,
@@ -31,6 +34,7 @@ import { UpdateToDoListUseCase } from './use-cases/update-to-do-list/update-to-d
 		GetOneToDoListByIdUseCase,
 		PostToDoListUseCase,
 		GetPaginatedToDoListUseCase,
+		GetPaginatedToDoListByCurrentUserUseCase,
 		GetExistingToDoListUseCase,
 		UpdateToDoListUseCase,
 		ThrowIfExistToDoListUseCase,
