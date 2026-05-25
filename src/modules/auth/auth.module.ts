@@ -7,6 +7,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LoginController } from './use-cases/login/login.controller';
 import { LoginUseCase } from './use-cases/login/login.use-case';
+import { LogoutController } from './use-cases/logout/logout.controller';
+import { LogoutUseCase } from './use-cases/logout/logout.use-case';
 import { RefreshTokenController } from './use-cases/refresh-token/refresh-token.controller';
 import { RefreshTokenUseCase } from './use-cases/refresh-token/refresh-token.use-case';
 
@@ -24,8 +26,8 @@ import { RefreshTokenUseCase } from './use-cases/refresh-token/refresh-token.use
 		}),
 		UserModule,
 	],
-	controllers: [LoginController, RefreshTokenController],
-	providers: [LoginUseCase, RefreshTokenUseCase, JwtStrategy, JwtAuthGuard],
+	controllers: [LoginController, LogoutController, RefreshTokenController],
+	providers: [LoginUseCase, LogoutUseCase, RefreshTokenUseCase, JwtStrategy, JwtAuthGuard],
 	exports: [JwtAuthGuard],
 })
 export class AuthModule {}

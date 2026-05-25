@@ -1,23 +1,18 @@
-import { UserRepositoryAbstract } from '@/modules/user/repositories/user.repository.abstract';
-import { GetExistingUserUseCase } from '@/modules/user/use-cases/get-existing-user.use-case';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { EnvService } from '@/config/env';
+import { clearAuthCookies } from '@/modules/auth/helpers/auth-cookies.helper';
+import { GetOneUserByIdUseCase } from '@/modules/user/use-cases/get-one-user-by-id/get-one-user-by-id.use-case';
+import { Injectable } from '@nestjs/common';
+import type { Response } from 'express';
 
 @Injectable()
 export class LogoutUseCase {
 	constructor(
-		private readonly userRepository: UserRepositoryAbstract,
-		private readonly getExistingUserUseCase: GetExistingUserUseCase,
+		private readonly getOneUserByIdUseCase: GetOneUserByIdUseCase,
+		private readonly env: EnvService,
 	) {}
 
-	async execute(userId: string): Promise<void> {
-		const user = await this.getExistingUserUseCase.execute({
-			where: {
-				id: userId,
-			},
-		});
-
-		if (!user) {
-			throw new NotFoundException('User not found');
-		}
+	async execute(userId: string, res: Response): Promise<void> {
+		await this.getOneUserByIdUseCase.execute(userId);
+		clearAuthCookies(res, { secure: this.env.isProduction });
 	}
 }

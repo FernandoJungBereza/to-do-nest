@@ -30,3 +30,15 @@ export function setAuthCookies(
 	setAccessTokenCookie(res, accessToken, options.secure);
 	setRefreshTokenCookie(res, refreshToken, options.secure);
 }
+
+const cookieOptions = (secure: boolean) => ({
+	httpOnly: true,
+	secure,
+	sameSite: 'lax' as const,
+});
+
+export function clearAuthCookies(res: Response, options: { secure: boolean }): void {
+	const opts = cookieOptions(options.secure);
+	res.clearCookie('accessToken', opts);
+	res.clearCookie('refreshToken', opts);
+}
