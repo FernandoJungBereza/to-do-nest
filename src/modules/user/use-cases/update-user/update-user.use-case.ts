@@ -1,43 +1,28 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { compare, hash } from 'bcrypt';
+import { Injectable } from '@nestjs/common';
 import { UpdateUserDto } from '../../dtos/update-user.dto';
 import { UserRepositoryAbstract } from '../../repositories/user.repository.abstract';
 import { GetExistingUserUseCase } from '../get-existing-user.use-case';
+import { ThrowIfExistUserUseCase } from '../throw-if-exist-user.use-case';
 
 @Injectable()
 export class UpdateUserUseCase {
-  constructor(
-    private readonly userRepository: UserRepositoryAbstract,
-    private readonly getExistingUserUseCase: GetExistingUserUseCase,
-  ) {}
+	constructor(
+		private readonly userRepository: UserRepositoryAbstract,
+		private readonly getExistingUserUseCase: GetExistingUserUseCase,
+		private readonly throwIfExistUserUseCase: ThrowIfExistUserUseCase,
+	) {}
 
-  async execute(id: string, updateUserDto: UpdateUserDto): Promise<void> {
-    const user = await this.getExistingUserUseCase.execute({
-      where: { id: id },
-    });
+	async execute(id: string, updateUserDto: UpdateUserDto): Promise<void> {
+		const user = await this.getExistingUserUseCase.execute({
+			where: { id },
+		});
 
-    const comparePassword = await compare(
-      updateUserDto.oldPassword,
-      user.password,
-    );
+		if (updateUserDto.email !== user.email) {
+			await this.throwIfExistUserUseCase.execute({
+				where: { email: updateUserDto.email },
+			});
+		}
 
-    if (!comparePassword) {
-      throw new UnauthorizedException('Osld password is incorrect');
-    }
-
-    if (updateUserDto.password !== updateUserDto.confirmPassword) {
-      throw new BadRequestException(
-        'Password and confirm password do not match',
-      );
-    }
-
-    const hashedPassword = await hash(updateUserDto.password, 10);
-    updateUserDto.password = hashedPassword;
-
-    await this.userRepository.update(user.id, updateUserDto);
-  }
+		await this.userRepository.update(user.id, updateUserDto);
+	}
 }

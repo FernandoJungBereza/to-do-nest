@@ -34,6 +34,10 @@ export class UserRepository implements UserRepositoryAbstract {
 		return await this.userRepository.update(id, updateUserDto);
 	}
 
+	async updatePassword(id: string, password: string): Promise<UpdateResult> {
+		return await this.userRepository.update(id, { password });
+	}
+
 	async delete(id: string): Promise<DeleteResult> {
 		return await this.userRepository.delete(id);
 	}

@@ -24,6 +24,8 @@ import { RestoreUserUseCase } from './use-cases/restore-user/restore-user.use-ca
 import { SoftDeleteUserController } from './use-cases/soft-delete-user/soft-delete-user.controller';
 import { SoftDeleteUserUseCase } from './use-cases/soft-delete-user/soft-delete-user.use-case';
 import { ThrowIfExistUserUseCase } from './use-cases/throw-if-exist-user.use-case';
+import { UpdateUserPasswordController } from './use-cases/update-user-password/update-user-password.controller';
+import { UpdateUserPasswordUseCase } from './use-cases/update-user-password/update-user-password.use-case';
 import { UpdateUserController } from './use-cases/update-user/update-user.controller';
 import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case';
 
@@ -36,6 +38,7 @@ import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case'
 		GetOneUserByIdController,
 		PostUserController,
 		UpdateUserController,
+		UpdateUserPasswordController,
 		SoftDeleteUserController,
 		GetPermissionsUserIdController,
 		AssignPermissionController,
@@ -46,6 +49,7 @@ import { UpdateUserUseCase } from './use-cases/update-user/update-user.use-case'
 		SoftDeleteUserUseCase,
 		PostUserUseCase,
 		UpdateUserUseCase,
+		UpdateUserPasswordUseCase,
 		ThrowIfExistUserUseCase,
 		GetOneUserByIdUseCase,
 		GetExistingUserUseCase,

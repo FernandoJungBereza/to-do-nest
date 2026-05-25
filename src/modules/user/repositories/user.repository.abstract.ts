@@ -12,6 +12,7 @@ export abstract class UserRepositoryAbstract {
 	abstract save(user: UserEntity): Promise<void>;
 	abstract create(postUserDto: PostUserDto): Promise<UserEntity>;
 	abstract update(id: string, updateUserDto: UpdateUserDto): Promise<UpdateResult>;
+	abstract updatePassword(id: string, password: string): Promise<UpdateResult>;
 	abstract delete(id: string): Promise<DeleteResult>;
 	abstract findPaginated(paginationNameAndEmailDto: PaginationNameAndEmailDto): Promise<OutputPaginatedUserDto>;
 	abstract softDelete(id: string): Promise<DeleteResult>;

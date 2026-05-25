@@ -32,49 +32,4 @@ export class UpdateUserDto {
 	@MaxLength(255)
 	@IsEmail()
 	email: string;
-
-	@ApiProperty({
-		description: 'The old password of the user',
-		example: 'password',
-		required: true,
-		type: String,
-		minLength: 8,
-		maxLength: 255,
-		format: 'password',
-	})
-	@IsString()
-	@IsNotEmpty()
-	@MinLength(8)
-	@MaxLength(255)
-	oldPassword: string;
-
-	@ApiProperty({
-		description: 'The password of the user',
-		example: 'password',
-		required: true,
-		type: String,
-		minLength: 8,
-		maxLength: 255,
-		format: 'password',
-	})
-	@IsString()
-	@IsNotEmpty()
-	@MinLength(8)
-	@MaxLength(255)
-	password: string;
-
-	@ApiProperty({
-		description: 'The confirm password of the user',
-		example: 'password',
-		required: true,
-		type: String,
-		minLength: 8,
-		maxLength: 255,
-		format: 'password',
-	})
-	@IsString()
-	@IsNotEmpty()
-	@MinLength(8)
-	@MaxLength(255)
-	confirmPassword: string;
 }

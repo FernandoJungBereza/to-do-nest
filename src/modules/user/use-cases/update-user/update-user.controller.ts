@@ -8,17 +8,14 @@ import { UpdateUserUseCase } from './update-user.use-case';
 @ApiTags('Users')
 @Controller('users')
 export class UpdateUserController {
-  constructor(private readonly updateUserUseCase: UpdateUserUseCase) {}
+	constructor(private readonly updateUserUseCase: UpdateUserUseCase) {}
 
 	@RequirePermission(Permission.UsersUpdate)
 	@Patch(':id')
-	@ApiOperation({ summary: 'Update a user by ID' })
-  @ApiResponse({ status: 200, description: 'User updated' })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  async updateUser(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return await this.updateUserUseCase.execute(id, updateUserDto);
-  }
+	@ApiOperation({ summary: 'Update a user profile (name and email) by ID' })
+	@ApiResponse({ status: 200, description: 'User updated' })
+	@ApiResponse({ status: 404, description: 'User not found' })
+	async updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
+		return await this.updateUserUseCase.execute(id, updateUserDto);
+	}
 }
